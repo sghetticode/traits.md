@@ -11,6 +11,9 @@
 
 @theme {
   --font-rubik: 'Rubik', ui-sans-serif;
+  /* daisyUI's dark base-content, kept for the progress fill and disabled button text. Not named
+     base-content, which daisyUI also defines while it's still loaded */
+  --color-glacier: oklch(97.807% 0.029 256.847);
 }
 
 /* Keeps labels aligned over radio columns */
