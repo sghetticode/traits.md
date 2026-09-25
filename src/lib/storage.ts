@@ -131,3 +131,8 @@ export function saveSession(session: Session) {
   writeOrRemove('results', session.results ? JSON.stringify(session.results) : null)
   writeOrRemove('traitDescription', session.description)
 }
+
+// Start the one-hour countdown to clearing local data. Called by the Download click handler only
+export function recordDownload() {
+  localStorage.setItem('downloadTimestamp', String(Date.now()))
+}

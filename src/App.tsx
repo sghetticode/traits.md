@@ -1,4 +1,7 @@
 import { useTraitTest } from '@/hooks/useTraitTest'
+import { useDescriptionGenerator } from '@/hooks/useDescriptionGenerator'
+import { downloadResults } from '@/lib/markdown'
+import { recordDownload } from '@/lib/storage'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { IntroCard } from '@/components/IntroCard'
@@ -8,13 +11,31 @@ import { ResultsView } from '@/components/ResultsView'
 
 export function App() {
   const test = useTraitTest()
+  const generator = useDescriptionGenerator()
   const { state } = test
 
-  // Phase 5 placeholder: grade and go straight to the table-only results. Phase 6 runs the
-  // description generator between these two calls
-  function handleSubmit() {
-    test.submit()
-    test.scored(null)
+  function handleStart() {
+    test.start()
+    // Load the language model in the background while the user takes the test
+    generator.preload()
+  }
+
+  // Only reachable with all 50 answered: Submit is disabled until then
+  async function handleSubmit() {
+    const results = test.submit() // grades, logs, and shows the scoring panel
+    try {
+      test.scored(await generator.generate(results))
+    } catch (err) {
+      console.error('Generator: Falling back to table-only results:', err)
+      test.scored(null)
+    }
+  }
+
+  function handleDownload() {
+    if (!state.results) return
+    console.log('Downloading TRAITS.md file...')
+    recordDownload()
+    downloadResults(state.results, state.description)
   }
 
   return (
@@ -23,7 +44,7 @@ export function App() {
         <ResultsView
           results={state.results}
           description={state.description}
-          onDownload={() => {}}
+          onDownload={handleDownload}
         />
       ) : (
         <>
@@ -46,8 +67,8 @@ export function App() {
             >
               <TestCard
                 state={state}
-                progressText=""
-                onStart={test.start}
+                progressText={generator.progressText}
+                onStart={handleStart}
                 onAnswer={test.answer}
                 onGoto={test.goto}
                 onPrev={test.prev}
