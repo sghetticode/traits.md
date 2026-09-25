@@ -64,3 +64,6 @@ export const items: Item[] = [
 ]
 
 export const ITEMS_PER_PAGE = 5
+
+// Instructions on page 0, trait test items on pages 1-10, and submit on page 11
+export const LAST_PAGE = Math.ceil(items.length / ITEMS_PER_PAGE) + 1
