@@ -1,10 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..500;1,300..500&display=swap');
 @import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
-@plugin 'daisyui';
+/* Scopes dark: utilities in shadcn components to a .dark class, which is never set, so they don't
+   follow the OS color scheme. The app is dark only; :root tokens below already hold the dark values. */
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-rubik: 'Rubik', ui-sans-serif;
+  /* The near-white of the original daisyUI dark theme, kept for the page text color, progress
+     fill and disabled button text */
+  --color-glacier: oklch(97.807% 0.029 256.847);
 }
 
 /* Keeps labels aligned over radio columns */
@@ -14,11 +21,64 @@
   justify-items: center;
 }
 
-html.results-found #header,
-html.results-found main {
-  display: none !important;
+/* shadcn semantic colors. No --radius-* overrides here, so Tailwind's default rounded-* scale applies */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
-html.results-found #test-results {
-  display: flex !important;
+/* Tokens set the color family only; components keep their exact alpha as utilities (bg-mist-500/70) */
+:root {
+  --radius: 0.5rem;
+  --background: var(--color-mist-800);
+  --foreground: var(--color-neutral-200);
+  --card: var(--color-mist-500);
+  --card-foreground: var(--color-neutral-200);
+  --popover: var(--color-mist-700);
+  --popover-foreground: var(--color-neutral-200);
+  --primary: var(--color-mist-500);
+  --primary-foreground: var(--color-neutral-100);
+  --secondary: var(--color-mist-600);
+  --secondary-foreground: var(--color-neutral-100);
+  --muted: var(--color-mist-600);
+  --muted-foreground: var(--color-mist-400);
+  --accent: var(--color-mist-600);
+  --accent-foreground: var(--color-neutral-100);
+  --destructive: var(--color-orange-800);
+  --border: var(--color-mist-600);
+  --input: var(--color-mist-600);
+  --ring: var(--color-mist-400);
+}
+
+@layer base {
+  /* What daisyUI's dark theme set on the page root: the background around and behind the body
+     (visible when overscrolling), dark browser UI, and thin scrollbars tinted by the text color */
+  html {
+    background-color: oklch(25.33% 0.016 252.42);
+    color: var(--color-glacier);
+    color-scheme: dark;
+    scrollbar-color: color-mix(in oklch, currentColor 35%, transparent) transparent;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
