@@ -14,24 +14,26 @@ results like 22.5% still land deterministically ("Low" below).
 | < 80           | High     |
 | >= 80          | Dense    |
 
-The results table and downloaded `CONFORM.md` both render `Factor | Percent | Level`.
+The results table and downloaded `TRAITS.md` both render `Factor | Percent | Level`.
 
 ## On submit `gradeTest()` does the following
 
-It grades the 50 IPIP items saved locally in `answers`, then saves the scores for each factor in 
-localStorage to be passed to `revealResults()`.
+`gradeTest()` in `src/lib/scoring.ts` grades the 50 answers (keyed by item `id`) and returns the
+scores for each factor. The test state hook saves them to localStorage as `results`.
 
 - **Scoring (official IPIP +/- key)** Plus items: `way off` = 1, `inaccurate` = 2, `neither` = 3, 
 `accurate` = 4, `spot on` = 5; Minus items (reverse): `way off` = 5... `spot on` = 1
 - **Totals** per factor = sum of its 10 scored items (range 10-50)
 - **Percentage** per factor = `(total - 10) / 40 * 100` (range 0-100%)
-- Item factor and key direction are read from each item cell's CSS classes in `index.html`
-(e.g. `<td class="extraversion plus">`) at module load into an `items` map
+- Item factor and key direction come from `src/data/items.ts`, where each item has a canonical
+`id` (its number in `ipip-50-item-scale.md`), `factor` and `sign` (e.g.
+`{ id: 6, text: "Don't talk a lot.", factor: 'extraversion', sign: '-' }`)
 
-## On submit `revealResults()` does the following
+## After scoring, `ResultsView` does the following
 
-It populates the results table with percentages for each factor saved locally in `results`, 
-then hides the main content to display the user's trait test results.
+Once `results` is set and scoring has finished, the app replaces the landing page with
+`src/components/ResultsView.tsx`, which renders the results table (and the description, if one
+was generated).
 
 ## Plus/minus item keys
 
@@ -105,12 +107,13 @@ Target factor all **Way off** (others all "Neither", i.e. Moderate):
 | Emotional Stability   | 42 / 80% / Dense       | all 30 / 50% / Moderate |
 | Intellect/Imagination | 22 / 30% / Low         | all 30 / 50% / Moderate |
 
-Item numbers are shown in the left column of each table, so you can count off which items belong 
-to a factor or check the `class="factor plus/minus"` attribute in `index.html`.
+Each item's `factor` and `sign` are listed in `src/data/items.ts`, so you can find which items
+belong to a factor there. The number shown in the app is the item's position in that array.
 
 ### Test area 3: Single-item flips
 
-Cleanest unit test of +/- scoring on known items (`index.html:113-131`). 
+Cleanest unit test of +/- scoring on known items. The numbers below are canonical `id`s from
+`src/data/items.ts`; in the app, items 1, 2 and 4 are shown as #46, #47 and #49.
 Baseline: all items "Neither" (every factor 30 / 50%). Change exactly one item:
 
 | Flip                                                        | Expected change | Expected factor result |

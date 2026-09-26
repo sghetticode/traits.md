@@ -11,7 +11,6 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
-    "daisyui": "^5.5.23",
     "prettier": "^3.8.4",
     "prettier-plugin-classnames": "^0.10.2",
     "prettier-plugin-merge": "^0.10.1",

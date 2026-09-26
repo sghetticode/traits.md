@@ -7,12 +7,10 @@
    follow the OS color scheme. The app is dark only; :root tokens below already hold the dark values. */
 @custom-variant dark (&:is(.dark *));
 
-@plugin 'daisyui';
-
 @theme {
   --font-rubik: 'Rubik', ui-sans-serif;
-  /* daisyUI's dark base-content, kept for the progress fill and disabled button text. Not named
-     base-content, which daisyUI also defines while it's still loaded */
+  /* The near-white of the original daisyUI dark theme, kept for the page text color, progress
+     fill and disabled button text */
   --color-glacier: oklch(97.807% 0.029 256.847);
 }
 
@@ -21,15 +19,6 @@
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   justify-items: center;
-}
-
-html.results-found #header,
-html.results-found main {
-  display: none !important;
-}
-
-html.results-found #test-results {
-  display: flex !important;
 }
 
 /* shadcn semantic colors. No --radius-* overrides here, so Tailwind's default rounded-* scale applies */
@@ -49,9 +38,7 @@ html.results-found #test-results {
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  /* Set directly, not via --border: daisyUI uses --border for border width (1px). Restore the
-     shadcn --border token once daisyUI is removed in phase 7 */
-  --color-border: var(--color-mist-600);
+  --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 }
@@ -74,11 +61,20 @@ html.results-found #test-results {
   --accent: var(--color-mist-600);
   --accent-foreground: var(--color-neutral-100);
   --destructive: var(--color-orange-800);
+  --border: var(--color-mist-600);
   --input: var(--color-mist-600);
   --ring: var(--color-mist-400);
 }
 
 @layer base {
+  /* What daisyUI's dark theme set on the page root: the background around and behind the body
+     (visible when overscrolling), dark browser UI, and thin scrollbars tinted by the text color */
+  html {
+    background-color: oklch(25.33% 0.016 252.42);
+    color: var(--color-glacier);
+    color-scheme: dark;
+    scrollbar-color: color-mix(in oklch, currentColor 35%, transparent) transparent;
+  }
   * {
     @apply border-border outline-ring/50;
   }
