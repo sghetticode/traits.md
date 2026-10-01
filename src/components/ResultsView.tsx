@@ -1,30 +1,42 @@
 import { cn } from '@/lib/utils'
 import { factors, factorNames, levelFor, type FactorResults } from '@/factors'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { buttonClass, tableClass } from '@/components/styles'
 
 interface ResultsViewProps {
   results: FactorResults
   description: string | null
   onDownload: () => void
+  onRegenerate: () => void
+  regenerating: boolean
+  regenerated: boolean
+  progressText: string
 }
 
-export function ResultsView({ results, description, onDownload }: ResultsViewProps) {
+export function ResultsView({
+  results,
+  description,
+  onDownload,
+  onRegenerate,
+  regenerating,
+  regenerated,
+  progressText,
+}: ResultsViewProps) {
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 overflow-x-hidden
-        overflow-y-auto bg-radial from-mist-700 from-30% to-mist-800 p-4 sm:gap-6 lg:gap-8 lg:p-8
-        xl:gap-9 xl:p-9 2xl:gap-12 2xl:p-12"
+      className="flex min-h-0 flex-1 flex-col items-center justify-center p-6 gap-6
+        overflow-x-hidden overflow-y-auto bg-radial from-mist-600 to-mist-800 lg:p-7 lg:gap-7 
+        xl:p-8 xl:gap-8"
     >
       <h3
-        className="text-center text-xl font-normal text-neutral-100 sm:text-2xl xl:text-3xl
-          2xl:text-4xl"
+        className="text-center text-2xl font-normal text-neutral-100 xl:text-[28px]"
       >
         Your personality traits
       </h3>
       <div
-        className="relative flex h-fit w-full max-w-lg flex-col rounded-xl bg-mist-400/75 p-4
-          shadow-md shadow-mist-900/60 lg:max-w-2xl xl:max-w-3xl xl:p-6 2xl:p-8"
+        className="relative flex h-fit w-full max-w-xl flex-col rounded-xl bg-mist-400/75 p-3
+          shadow-md shadow-mist-900/60 lg:max-w-2xl lg:p-4 xl:max-w-3xl"
       >
         <table
           className={cn(
@@ -32,47 +44,69 @@ export function ResultsView({ results, description, onDownload }: ResultsViewPro
             'rounded-lg border border-mist-600/60 bg-mist-500/50 [&_tr>*]:border-b-mist-600/30',
           )}
         >
-          <thead className="text-sm text-neutral-100 sm:text-base xl:text-xl 2xl:text-2xl">
+          <thead className="text-lg text-neutral-100 xl:text-xl">
             <tr>
               <th>Factor</th>
               <th>Percent</th>
               <th>Level</th>
             </tr>
           </thead>
-          <tbody className="text-xs text-neutral-100 sm:text-sm xl:text-lg 2xl:text-xl">
+          <tbody className="text-neutral-100 lg:text-lg">
             {factors.map((factor) => (
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
                 <td>{Math.round(results[factor].percentage)}%</td>
-                <td>{levelFor(results[factor].percentage)}</td>
+                <td className='italic'>{levelFor(results[factor].percentage)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {/* The card stays when there's no description (table-only fallback), as it did before */}
-      <div
-        className="relative flex h-fit w-full max-w-lg flex-col rounded-lg bg-mist-400/80 p-5
-          shadow-md shadow-mist-900/60 lg:max-w-2xl xl:max-w-3xl"
-      >
-        {description && (
+      {description && (
+        <div
+          aria-busy={regenerating}
+          className="relative flex h-fit w-full max-w-xl flex-col rounded-lg bg-mist-400/80 p-3
+            shadow-md shadow-mist-900/60 lg:max-w-2xl lg:p-4 xl:max-w-3xl"
+        >
           <p
-            className="rounded-md border border-mist-600/40 bg-mist-500/70 p-4 text-justify text-sm
-              leading-normal text-neutral-100 sm:text-base xl:text-xl 2xl:text-2xl"
+            className="rounded-md border border-mist-600/40 bg-mist-500/70 p-4 text-justify
+            text-neutral-100 lg:text-lg"
           >
             {description}
           </p>
-        )}
-      </div>
-      <div className="w-full max-w-lg lg:max-w-2xl xl:max-w-3xl">
+          {/* One regenerate per result, so the button goes away once it's been used */}
+          {!regenerated && (
+            <div className="mt-3 flex items-center justify-end gap-3">
+              {regenerating && (
+                <p className="text-sm text-neutral-100 italic lg:text-base" role="status">
+                  {progressText}
+                </p>
+              )}
+              <Button
+                variant="ghost"
+                disabled={regenerating}
+                onClick={onRegenerate}
+                className={cn(
+                  buttonClass,
+                  'h-9 w-fit rounded-xl border border-mist-600/70 bg-mist-500/70 p-3',
+                  'text-sm font-normal lg:text-base hover:bg-mist-500 hover:text-inherit',
+                )}
+              >
+                {regenerating && <Spinner aria-hidden role="presentation" />}
+                Regenerate description
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+      <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-3xl">
         <h3
-          className="mb-3 text-base font-normal text-neutral-100 sm:text-lg xl:text-xl 2xl:text-2xl"
+          className="mb-3 text-lg font-normal text-neutral-100 lg:text-xl"
         >
-          To use your trait data:
+          To use your traits with an agent:
         </h3>
         <ol
-          className="list-inside list-decimal space-y-2 text-sm text-neutral-100 sm:text-base
-            xl:text-lg 2xl:text-xl"
+          className="list-inside list-decimal space-y-2 text-base text-neutral-100 lg:text-lg"
         >
           <li>
             Download your
@@ -81,20 +115,19 @@ export function ResultsView({ results, description, onDownload }: ResultsViewPro
               onClick={onDownload}
               className={cn(
                 buttonClass,
-                'ml-1 h-8 rounded-full border-none bg-mist-500/75 p-3 text-xs font-normal shadow-sm',
-                'shadow-mist-900/60 hover:bg-mist-500 hover:text-inherit sm:h-10 sm:text-sm lg:h-12',
-                'lg:text-lg',
+                'h-9 rounded-2xl border-none bg-mist-500/75 ml-2 p-3 text-sm font-normal',
+                'shadow-md shadow-mist-900/60 hover:bg-mist-500 hover:text-inherit lg:h-10',
+                'lg:text-base',
               )}
             >
               TRAITS.md
             </Button>
           </li>
           <li>
-            Move it to the agents folder in your home directory: <code>~/.agents/TRAITS.md</code>
+            Move it to an agents folder in your home directory: <code>~/.agents/TRAITS.md</code>
           </li>
           <li>
-            Reference it in a global <code>AGENTS.md</code> so any of your agents can access your
-            trait data
+            Point to it in a global <code>AGENTS.md</code> so your agent can use your trait data
           </li>
         </ol>
       </div>
