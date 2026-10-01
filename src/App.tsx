@@ -1,3 +1,8 @@
+/*
+ Show intro and test UI until submit grades answers and reveals ResultsView.
+ State lives in the two hooks, see src/README.md for the app's source map.
+*/
+
 import { useTraitTest } from '@/hooks/useTraitTest'
 import { useDescriptionGenerator } from '@/hooks/useDescriptionGenerator'
 import { downloadResults } from '@/lib/markdown'
@@ -16,18 +21,30 @@ export function App() {
 
   function handleStart() {
     test.start()
-    // Load the language model in the background while the user takes the test
+    // Load lang model in background while user takes trait test
     generator.preload()
   }
 
-  // Only reachable with all 50 answered: Submit is disabled until then
+  // Submit is disabled by default and enabled only after all 50 statements are ranked
   async function handleSubmit() {
-    const results = test.submit() // grades, logs, and shows the scoring panel
+    // Grades, logs, and shows scoring panel
+    const results = test.submit()
     try {
       test.scored(await generator.generate(results))
     } catch (err) {
-      console.error('Generator: Falling back to table-only results:', err)
+      console.error('Error generating description. Falling back to table results.\n', err)
       test.scored(null)
+    }
+  }
+
+  async function handleRegenerate() {
+    if (!state.results || state.regenerated || generator.busy) return
+    try {
+      console.log('Regenerating personality description...')
+      test.regenerated(await generator.generate(state.results))
+    } catch (err) {
+      // Keep the current description rather than replacing it with nothing
+      console.error('Error regenerating description. Keeping the current description.\n', err)
     }
   }
 
@@ -45,6 +62,10 @@ export function App() {
           results={state.results}
           description={state.description}
           onDownload={handleDownload}
+          onRegenerate={handleRegenerate}
+          regenerating={generator.busy}
+          regenerated={state.regenerated}
+          progressText={generator.progressText}
         />
       ) : (
         <>
