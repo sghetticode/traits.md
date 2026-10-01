@@ -81,11 +81,12 @@ export function generateDescription(
       {
         role: 'system',
         content:
-          `Write a paragraph describing this person's traits using the following criteria:
-          - base the description on factor percentages and their associated levels
-          - don't explicitly use factor and/or level names in the output
-          - write one sentence for each of the five factors
-          - avoid suggestions for making improvements
+          `Write a description of the user's personality using the following criteria:
+          - base output on factor percentages and levels from trait test results
+          - do not state the five factors or level names in the description
+          - use adjectives in place of factor and level names instead
+          - write only one sentence for each of the five traits
+          - avoid suggestions for making self-improvements
           - use present tense in second person`
       },
       { role: 'user', content: factorData },
