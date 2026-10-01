@@ -23,7 +23,7 @@ const minusScores: Record<Rating, number> = {
   'spot on': 1,
 }
 
-// Calculate trait test results for each factor. Pure: no logging or storage, the caller does both
+// Calculate trait test results for each factor. No logging or storage, caller does both.
 export function gradeTest(answers: Answers, items: Item[] = allItems): FactorResults {
   const itemsById = new Map(items.map((item) => [item.id, item]))
 
