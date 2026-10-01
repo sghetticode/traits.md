@@ -10,6 +10,8 @@ export interface Session {
   answers: Answers
   results: FactorResults | null
   description: string | null
+  // The one allowed regenerate has been used, so the button stays hidden after a reload too
+  regenerated: boolean
 }
 
 const HOUR = 3600 * 1000
@@ -20,6 +22,7 @@ const fresh = (): Session => ({
   answers: {},
   results: null,
   description: null,
+  regenerated: false,
 })
 
 // Before the React port, answers were keyed by item text: lowercased, trailing period removed
@@ -99,7 +102,12 @@ export function loadSession(): Session {
     localStorage.removeItem('panelRendered')
 
     const description = localStorage.getItem('traitDescription')
-    return { ...fresh(), results, description: description ? description : null }
+    return {
+      ...fresh(),
+      results,
+      description: description ? description : null,
+      regenerated: localStorage.getItem('descriptionRegenerated') === 'true',
+    }
   }
 
   const started = localStorage.getItem('testStarted') === 'true'
@@ -112,6 +120,7 @@ export function loadSession(): Session {
     results: null,
     // A description without results is stale, so it's dropped along with them
     description: null,
+    regenerated: false,
   }
 }
 
@@ -130,6 +139,7 @@ export function saveSession(session: Session) {
   )
   writeOrRemove('results', session.results ? JSON.stringify(session.results) : null)
   writeOrRemove('traitDescription', session.description)
+  writeOrRemove('descriptionRegenerated', session.regenerated ? 'true' : null)
 }
 
 // Start the one-hour countdown to clearing local data. Called by the Download click handler only
