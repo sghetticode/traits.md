@@ -5,10 +5,14 @@ import type { Rating } from '@/data/ratings'
 import { gradeTest, logResults } from '@/lib/scoring'
 import { loadSession, saveSession, textKey, type Session } from '@/lib/storage'
 
+/*
+ Test page 0 shows instructions with start btn enabled.
+ Once started nav btns are enabled and start btn is disabled.
+ Going back to the instructions page shouldn't undo this.
+*/
+
 export interface TestState extends Session {
-  // `started` is separate from `page`: once started, page 0 shows the instructions with Start
-  // disabled and the nav enabled, so going back to page 0 must not undo it
-  status: 'idle' | 'scoring' // transient, never saved
+  status: 'idle' | 'scoring'
 }
 
 export type TestAction =
@@ -19,6 +23,7 @@ export type TestAction =
   | { type: 'prev' }
   | { type: 'submit'; results: FactorResults }
   | { type: 'scored'; description: string | null }
+  | { type: 'regenerated'; description: string }
 
 const clampPage = (page: number) => Math.min(LAST_PAGE, Math.max(0, page))
 
@@ -37,7 +42,7 @@ export function testReducer(state: TestState, action: TestAction): TestState {
       return { ...state, page: clampPage(state.page - 1) }
     case 'submit':
       // Answers stay until scoring ends, so the progress bar stays full while the model runs
-      return { ...state, results: action.results, status: 'scoring' }
+      return { ...state, results: action.results, status: 'scoring', regenerated: false }
     case 'scored':
       return {
         ...state,
@@ -47,6 +52,8 @@ export function testReducer(state: TestState, action: TestAction): TestState {
         started: false,
         page: 0,
       }
+    case 'regenerated':
+      return { ...state, description: action.description, regenerated: true }
   }
 }
 
@@ -56,12 +63,12 @@ function init(): TestState {
 
 export function useTraitTest() {
   const [state, dispatch] = useReducer(testReducer, undefined, init)
-  const { started, page, answers, results, description } = state
+  const { started, page, answers, results, description, regenerated } = state
 
-  // The only writer of these five keys; runs after any of them changes
+  // The only writer of these session keys; runs after any of them changes
   useEffect(() => {
-    saveSession({ started, page, answers, results, description })
-  }, [started, page, answers, results, description])
+    saveSession({ started, page, answers, results, description, regenerated })
+  }, [started, page, answers, results, description, regenerated])
 
   return {
     state,
@@ -98,6 +105,10 @@ export function useTraitTest() {
     },
     scored(description: string | null) {
       dispatch({ type: 'scored', description })
+    },
+    // Swap in the regenerated description and use up the single allowed regenerate
+    regenerated(description: string) {
+      dispatch({ type: 'regenerated', description })
     },
   }
 }
