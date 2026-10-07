@@ -1,7 +1,10 @@
 import { env, pipeline, type Message, type TextGenerationPipeline } from '@huggingface/transformers'
 
-const MODEL_ID = 'onnx-community/LFM2-700M-ONNX'
-const DTYPE_FOR = { wasm: 'q8', webgpu: 'q4' } as const
+const MODEL_ID = 'onnx-community/LFM2-1.2B-ONNX'
+// q4f16 needs WebGPU shader-f16 support, q4 fallback
+const DTYPE_FOR = { wasm: 'q8', webgpu: 'q4', 'webgpu-f16': 'q4f16' } as const
+
+type Backend = keyof typeof DTYPE_FOR
 
 // Events this worker sends to the main thread
 type WorkerEvent =
@@ -13,7 +16,7 @@ type WorkerEvent =
 // Commands the main thread sends in
 type WorkerCommand = { type: 'load' } | { type: 'generate'; messages: Message[] }
 
-// Self (self) is typed as Window under the project's DOM lib so cast to worker global shape
+// Self is typed as Window under the project's DOM lib so cast to worker global shape
 const workerScope = self as unknown as {
   postMessage(message: WorkerEvent): void
   onmessage: ((ev: MessageEvent<WorkerCommand>) => void) | null
@@ -21,11 +24,13 @@ const workerScope = self as unknown as {
 
 let generatorPromise: Promise<TextGenerationPipeline> | null = null
 
-async function detectDevice(): Promise<'webgpu' | 'wasm'> {
+async function detectBackend(): Promise<Backend> {
   try {
-    const gpu = (navigator as { gpu?: { requestAdapter: () => Promise<unknown | null> } }).gpu
+    type Adapter = { features: { has: (feature: string) => boolean } }
+    const gpu = (navigator as { gpu?: { requestAdapter: () => Promise<Adapter | null> } }).gpu
     const adapter = gpu ? await gpu.requestAdapter() : null
-    return adapter ? 'webgpu' : 'wasm'
+    if (!adapter) return 'wasm'
+    return adapter.features.has('shader-f16') ? 'webgpu-f16' : 'webgpu'
   } catch {
     return 'wasm'
   }
@@ -45,12 +50,12 @@ const lastLoggedPercent = new Map<string, number>()
 export function getGenerator(): Promise<TextGenerationPipeline> {
   if (!generatorPromise) {
     generatorPromise = (async () => {
-      const device = await detectDevice()
-      if (device === 'wasm') configureWasm()
-      
+      const backend = await detectBackend()
+      if (backend === 'wasm') configureWasm()
+
       return pipeline('text-generation', MODEL_ID, {
-        device,
-        dtype: DTYPE_FOR[device],
+        device: backend === 'wasm' ? 'wasm' : 'webgpu',
+        dtype: DTYPE_FOR[backend],
         progress_callback: (data) => {
           if (data.status !== 'progress' || data.total <= 0) return
 
@@ -82,15 +87,16 @@ workerScope.onmessage = async (ev) => {
       return
     }
 
-    // Generate: reuse in-flight or ready pipeline, so no re-download after preload
+    // Generate: reuse in-flight or ready pipeline, no re-download after preload
     const generator = await getGenerator()
     workerScope.postMessage({ type: 'generating' })
 
     const output = await generator(command.messages, {
-      max_new_tokens: 200,
       do_sample: true,
-      temperature: 0.3,
+      temperature: 0.4,
+      top_p: 0.9,
       repetition_penalty: 1.05,
+      max_new_tokens: 512,
     })
 
     const content = output[0].generated_text.at(-1)?.content
