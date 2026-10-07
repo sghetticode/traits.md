@@ -1,15 +1,16 @@
 import type { Factor } from '@/factors'
 
 export interface Item {
-  id: number // canonical IPIP number (ipip-50-item-scale.md); the stable storage key
+  id: number // stable storage key (ipip-50-item-scale.md)
   text: string
   factor: Factor
   sign: '+' | '-'
 }
 
-// Display order of ipip-item-sets/reordered-50-item-scale-1.md. The number shown to the user is the
-// item's position in this array, not its id
-// prettier-ignore
+/* 
+  Display order of reordered-50-item-scale-1.md
+  User-facing numbers are from item position in this array not the id
+*/
 export const items: Item[] = [
   { id: 6, text: "Don't talk a lot.", factor: 'extraversion', sign: '-' },
   { id: 7, text: 'Am interested in people.', factor: 'agreeableness', sign: '+' },
