@@ -9,11 +9,10 @@ data effectively.
 ### How the test works
 
 The results of the trait test are separated into five factors, known as the "Big Five" personality 
-traits (extraversion, agreeableness, conscientiousness, emotional stability, and intellect/imagination). 
-Each will have a percentage associated with it based on statements you ranked as either way off, 
-inaccurate, neither, accurate, or spot on. These values are passed to an LLM running in the browser 
-to generate a description of your personality. Your results are saved to a Markdown file that's 
-specific to you.
+traits (extraversion, agreeableness, conscientiousness, emotional stability, and intellect/imagination).
+Each factor percentage is based on how you rank the test statements. These values are passed to a 
+local model, using Transformers.js, to generate a description of your personality. Your results are 
+saved to a TRAITS.md file that's specific to you.
 
 ### Using traits with an agent
 
