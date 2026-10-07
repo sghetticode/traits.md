@@ -1,5 +1,5 @@
 import type { Message } from '@huggingface/transformers'
-import { factors, factorNames, levelFor, type FactorResults } from './factors'
+import { factors, factorNames, formatPercentage, levelFor, type FactorResults } from './factors'
 
 export type ProgressHandler = (status: string) => void
 
@@ -53,7 +53,7 @@ function getWorker(): Worker {
   return worker
 }
 
-// Kick off model download to load in background
+// Load Transformers.js model while user takes test
 export function preloadGenerator() {
   getWorker().postMessage({ type: 'load' })
 }
@@ -73,21 +73,22 @@ export function generateDescription(
     const factorData = factors
       .map((factor) => {
         const percentage = results[factor].percentage
-        return `${factorNames[factor]}: ${Math.round(percentage)}% (${levelFor(percentage)})`
+        return `${factorNames[factor]}: ${formatPercentage(percentage)} (${levelFor(percentage)})`
       })
       .join('\n')
 
     const messages: Message[] = [
       {
         role: 'system',
+        // Prompt for generating user personality description
         content:
-          `Write a description of the user's personality using the following criteria:
-          - base output on factor percentages and levels from trait test results
-          - do not state the five factors or level names in the description
-          - use adjectives in place of factor and level names instead
-          - write only one sentence for each of the five traits
-          - avoid suggestions for making self-improvements
-          - use present tense in second person`
+          `Write a personality description using these rules:
+          Text output:
+          - write 5 sentences (one for each factor)
+          - never include the factor percentages
+          Writing style:
+          - use present tense in second person (you/your)
+          - base adjective choice on trait test results`
       },
       { role: 'user', content: factorData },
     ]
