@@ -13,10 +13,9 @@ interface TestNavProps {
   onNext: () => void
 }
 
-// daisyUI btn-md, then btn-sm from lg up
 const navButtonClass = cn(
   buttonClass,
-  'h-10 rounded-none border-none px-4 text-sm shadow-none lg:h-8 lg:px-3 lg:text-xs',
+  'h-8 px-2.5 border-none rounded-none text-xs shadow-none lg:h-9 lg:px-3',
   'hover:bg-mist-600/70',
 )
 

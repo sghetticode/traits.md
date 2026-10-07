@@ -17,7 +17,7 @@ export function HowItWorks() {
         }}
       >
         <AccordionItem value="how-it-works">
-          {/* Custom trigger: shadcn's shows a chevron, this keeps the original +/− */}
+          {/* Custom trigger replaces shadcn's chevron with a plus/minus sign */}
           <AccordionPrimitive.Header className="lg:text-[1.375rem] xl:text-2xl">
             <AccordionPrimitive.Trigger
               className="group focus-visible:ring-ring/50 relative w-full cursor-pointer p-4 pe-12
@@ -41,12 +41,12 @@ export function HowItWorks() {
               className="border-l-[3px] border-l-mist-400/80 pl-4 text-justify leading-normal
                 font-light lg:text-xl"
             >
-              The results of this trait test are separated into five factors, known as the "Big
-              Five" personality traits. Each will have a percentage associated with it based on
-              statements you ranked as either way off, inaccurate, neither, accurate, or spot on.
-              These values are passed to an LLM running in the browser to generate a description of
-              your personality. Your results are saved to a Markdown file that's specific to you.
-              Follow the instructions provided after you finish the test to use as intended.
+              The results of the trait test are separated into five factors, known as the "Big Five" 
+              personality traits (extraversion, agreeableness, conscientiousness, emotional stability, 
+              and intellect/imagination). Each factor percentage is based on how you rank the test 
+              statements. These values are passed to a LM running in browser to generate a description 
+              of your personality. Your results are saved to a TRAITS.md file that's specific to you. 
+              Follow the steps after submitting the test to use your trait data effectively.
             </p>
           </AccordionContent>
         </AccordionItem>

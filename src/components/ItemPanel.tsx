@@ -6,7 +6,7 @@ import { tableClass } from '@/components/styles'
 import { RatingRadioGroup } from '@/components/RatingRadioGroup'
 
 interface ItemPanelProps {
-  page: number // 1-10
+  page: number
   answers: Answers
   onAnswer: (item: Item, rating: Rating) => void
 }
@@ -34,8 +34,8 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
             <th scope="col" aria-label="Rating"></th>
             <th>
               <div
-                className="rating-grid mb-2 text-[10px] leading-tight wrap-break-word
-                  whitespace-normal sm:text-xs md:text-sm"
+                className="rating-grid mb-2 text-xs leading-tight wrap-break-word
+                  whitespace-normal md:text-sm xl:text-base"
               >
                 {RATINGS.map((rating) => (
                   <span key={rating.value} className={cn('w-full text-center', rating.header)}>

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { factors, factorNames, levelFor, type FactorResults } from '@/factors'
+import { factors, factorNames, formatPercentage, levelFor, type FactorResults } from '@/factors'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { buttonClass, tableClass } from '@/components/styles'
@@ -30,9 +30,9 @@ export function ResultsView({
         xl:p-8 xl:gap-8"
     >
       <h3
-        className="text-center text-2xl font-normal text-neutral-100 xl:text-[28px]"
+        className="text-center underline underline-offset-3 text-2xl font-normal text-neutral-100 xl:text-[28px]"
       >
-        Your personality traits
+        Your trait test scores
       </h3>
       <div
         className="relative flex h-fit w-full max-w-xl flex-col rounded-xl bg-mist-400/75 p-3
@@ -55,7 +55,7 @@ export function ResultsView({
             {factors.map((factor) => (
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
-                <td>{Math.round(results[factor].percentage)}%</td>
+                <td>{formatPercentage(results[factor].percentage)}</td>
                 <td className='italic'>{levelFor(results[factor].percentage)}</td>
               </tr>
             ))}
@@ -74,11 +74,11 @@ export function ResultsView({
           >
             {description}
           </p>
-          {/* One regenerate per result, so the button goes away once it's been used */}
+          {/* Regen btn goes away after one use */}
           {!regenerated && (
             <div className="mt-3 flex items-center justify-end gap-3">
               {regenerating && (
-                <p className="text-sm text-neutral-100 italic lg:text-base" role="status">
+                <p className="sr-only" role="status">
                   {progressText}
                 </p>
               )}

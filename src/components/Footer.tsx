@@ -7,8 +7,9 @@ export function Footer() {
       <aside className="grid place-items-center gap-2 text-sm">
         <h4 className="font-medium">YOUR DATA DOESN'T LEAVE YOUR DEVICE</h4>
         <p className="italic">
-          Trait test data is temporarily stored in your browser. All of it is deleted shortly after
-          you download your TRAITS.md file (~1 hour).
+          Trait test data is temporarily stored in your browser.
+          <br className="min-[56rem]:hidden" /> All of it is deleted ~1 hour after you download
+          your TRAITS.md file.
         </p>
       </aside>
     </footer>

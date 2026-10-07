@@ -17,8 +17,8 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
   const remaining = items.length - answeredCount(answers)
   const scoringRef = useRef<HTMLDivElement>(null)
 
-  // Move focus to the scoring panel once it's on screen. An effect, not the click handler: the panel
-  // doesn't exist yet when Submit is clicked
+  // Move focus to the scoring panel once it's on screen.
+  // An effect, not the click handler: the panel doesn't exist yet when Submit is clicked
   useEffect(() => {
     if (scoring) scoringRef.current?.focus()
   }, [scoring])
@@ -45,7 +45,7 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
         </div>
       ) : (
         <>
-          <h3 className="text-xl font-medium text-mist-600 sm:text-2xl xl:text-3xl 2xl:text-4xl">
+          <h3 className="text-xl font-medium text-mist-600/90 sm:text-2xl xl:text-3xl 2xl:text-4xl">
             Submit your trait test
           </h3>
           {remaining > 0 && (
@@ -53,7 +53,7 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
               className="mt-2 text-base text-orange-800 italic sm:text-lg xl:text-xl 2xl:text-2xl"
               role="alert"
             >
-              Rate every item to submit ({remaining} remain)
+              Rate every item to submit ({remaining} left)
             </p>
           )}
           <Button
