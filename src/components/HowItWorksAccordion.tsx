@@ -2,7 +2,7 @@ import { Accordion as AccordionPrimitive } from 'radix-ui'
 import { MinusIcon, PlusIcon } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
 
-export function HowItWorks() {
+export function HowItWorksAccordion() {
   return (
     <section
       id="how-it-works"
@@ -26,12 +26,12 @@ export function HowItWorks() {
               How it works
               <PlusIcon
                 aria-hidden
-                className="absolute end-5 top-1/2 size-[0.75em] -translate-y-1/2
+                className="absolute inset-e-5 top-1/2 size-[0.75em] -translate-y-1/2
                   group-aria-expanded:hidden"
               />
               <MinusIcon
                 aria-hidden
-                className="absolute end-5 top-1/2 hidden size-[0.75em] -translate-y-1/2
+                className="absolute inset-e-5 top-1/2 hidden size-[0.75em] -translate-y-1/2
                   group-aria-expanded:block"
               />
             </AccordionPrimitive.Trigger>
@@ -41,12 +41,13 @@ export function HowItWorks() {
               className="border-l-[3px] border-l-mist-400/80 pl-4 text-justify leading-normal
                 font-light lg:text-xl"
             >
-              The results of the trait test are separated into five factors, known as the "Big Five" 
-              personality traits (extraversion, agreeableness, conscientiousness, emotional stability, 
-              and intellect/imagination). Each factor percentage is based on how you rank the test 
-              statements. These values are passed to a LM running in browser to generate a description 
-              of your personality. Your results are saved to a TRAITS.md file that's specific to you. 
-              Follow the steps after submitting the test to use your trait data effectively.
+              The results of the trait test are separated into five factors, known as the "Big Five"
+              personality traits (extraversion, agreeableness, conscientiousness, emotional stability,
+              and intellect/imagination). Each factor score is determined by how you rank the test
+              statements. These values are passed to a local model running in the browser to
+              generate a description of your personality. Your results are saved to a TRAITS.md
+              file that's specific to you. Follow the steps on the results page to use your trait
+              data effectively.
             </p>
           </AccordionContent>
         </AccordionItem>
