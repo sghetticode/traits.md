@@ -5,12 +5,12 @@
 
 import { useTraitTest } from '@/hooks/useTraitTest'
 import { useDescriptionGenerator } from '@/hooks/useDescriptionGenerator'
-import { downloadResults } from '@/lib/markdown'
+import { downloadResults } from '@/lib/exportMarkdown'
 import { recordDownload } from '@/lib/storage'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { IntroCard } from '@/components/IntroCard'
-import { HowItWorks } from '@/components/HowItWorks'
+import { HowItWorksAccordion } from '@/components/HowItWorksAccordion'
 import { TestCard } from '@/components/TestCard'
 import { ResultsView } from '@/components/ResultsView'
 
@@ -21,7 +21,7 @@ export function App() {
 
   function handleStart() {
     test.start()
-    // Load lang model in background while user takes trait test
+    // Load model in background while user takes test
     generator.preload()
   }
 
@@ -43,7 +43,7 @@ export function App() {
       console.log('Regenerating personality description...')
       test.regenerated(await generator.generate(state.results))
     } catch (err) {
-      // Keep the current description rather than replacing it with nothing
+      // Keep the current description rather than removing it
       console.error('Error regenerating description. Keeping the current description.\n', err)
     }
   }
@@ -76,7 +76,7 @@ export function App() {
               lg:gap-y-4"
           >
             <h2
-              className="text-[1.375rem] font-normal text-neutral-100/80 max-sm:mx-auto sm:pl-5
+              className="text-[1.375rem] font-normal text-neutral-100/80 text-center max-sm:mx-auto sm:pl-5
                 sm:text-2xl md:hidden"
             >
               Let your agent get acquainted with you
@@ -97,7 +97,7 @@ export function App() {
                 onSubmit={handleSubmit}
               />
             </div>
-            <HowItWorks />
+            <HowItWorksAccordion />
           </main>
         </>
       )}
