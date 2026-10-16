@@ -5,7 +5,7 @@
 
 import { useTraitTest } from '@/hooks/useTraitTest'
 import { useDescriptionGenerator } from '@/hooks/useDescriptionGenerator'
-import { downloadResults } from '@/lib/exportMarkdown'
+import { downloadMarkdown } from '@/lib/exportMarkdown'
 import { recordDownload } from '@/lib/storage'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
@@ -52,7 +52,7 @@ export function App() {
     if (!state.results) return
     console.log('Downloading TRAITS.md file...')
     recordDownload()
-    downloadResults(state.results, state.description)
+    downloadMarkdown(state.results, state.description)
   }
 
   return (

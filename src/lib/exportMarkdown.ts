@@ -1,4 +1,4 @@
-import { factors, factorNames, formatPercentage, levelFor, type FactorResults } from '@/factors'
+import { factors, factorNames, formatPercentage, type FactorResults } from '@/factors'
 
 // Build traits Markdown file with Frontmatter
 export function buildMarkdown(results: FactorResults, description: string | null): string {
@@ -6,8 +6,7 @@ export function buildMarkdown(results: FactorResults, description: string | null
     .map((factor) => {
       const name = factorNames[factor]
       const percent = formatPercentage(results[factor].percentage)
-      const level = levelFor(results[factor].percentage)
-      return `  ${name}: ${percent} (${level})`
+      return `  ${name}: ${percent}`
     })
     .join('\n')
 
@@ -18,8 +17,8 @@ export function buildMarkdown(results: FactorResults, description: string | null
 
 ## Agent Instructions
 
-Use the personality description and the percentages and (levels) in the Frontmatter of this file
-to shape your interactions to the traits of the person you're working with.
+Use the personality description and trait percentages in this file's Frontmatter to shape your
+interactions to the person you're working with.
 
 ### Personality Description
 `
@@ -30,7 +29,7 @@ to shape your interactions to the traits of the person you're working with.
 }
 
 // Create object URL blob and trigger download of TRAITS.md file
-export function downloadResults(results: FactorResults, description: string | null) {
+export function downloadMarkdown(results: FactorResults, description: string | null) {
   const blob = new Blob([buildMarkdown(results, description)], { type: 'text/markdown' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')

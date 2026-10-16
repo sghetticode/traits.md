@@ -25,9 +25,6 @@ export interface FactorResult {
 
 export type FactorResults = Record<Factor, FactorResult>
 
-// Interpretive levels for factor percentages
-export type Level = 'Sparse' | 'Low' | 'Moderate' | 'High' | 'Dense'
-
 // Matches gradeTest() calculation (steps of 2.5%)
 const FACTOR_PERCENT_STEP = 2.5
 
@@ -43,14 +40,4 @@ export function formatPercentage(percentage: number): string {
     const displayCents = Math.round(value * 100)
     if (displayCents % 100 === 0) return `${displayCents / 100}%`
     return `${(displayCents / 100).toFixed(1)}%`
-}
-
-// Map to interpretive levels: sparse, low, moderate, high, dense
-export function levelFor(percentage: number): Level {
-    const percent = snapPercentage(percentage)
-    if (percent < 20) return 'Sparse'
-    if (percent < 40) return 'Low'
-    if (percent < 60) return 'Moderate'
-    if (percent < 80) return 'High'
-    return 'Dense'
 }

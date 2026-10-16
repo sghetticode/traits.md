@@ -1,5 +1,5 @@
 import type { Message } from '@huggingface/transformers'
-import { factors, factorNames, formatPercentage, levelFor, type FactorResults } from './factors'
+import { factors, factorNames, formatPercentage, type FactorResults } from './factors'
 
 export type ProgressHandler = (status: string) => void
 
@@ -73,7 +73,7 @@ export function generateDescription(
     const factorData = factors
       .map((factor) => {
         const percentage = results[factor].percentage
-        return `${factorNames[factor]}: ${formatPercentage(percentage)} (${levelFor(percentage)})`
+        return `${factorNames[factor]}: ${formatPercentage(percentage)}`
       })
       .join('\n')
 
@@ -85,7 +85,7 @@ export function generateDescription(
           `Write a personality description using these rules:
           Text output:
           - write 5 sentences (one for each factor)
-          - never include the factor percentages
+          - never put score percentages in the description
           Writing style:
           - use present tense in second person (you/your)
           - base adjective choice on trait test results`

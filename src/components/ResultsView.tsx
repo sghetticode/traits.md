@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { factors, factorNames, formatPercentage, levelFor, type FactorResults } from '@/factors'
+import { factors, factorNames, formatPercentage, type FactorResults } from '@/factors'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { buttonClass, tableClass } from '@/components/styles'
@@ -48,7 +48,6 @@ export function ResultsView({
             <tr>
               <th>Factor</th>
               <th>Percent</th>
-              <th>Level</th>
             </tr>
           </thead>
           <tbody className="text-neutral-100 lg:text-lg">
@@ -56,7 +55,6 @@ export function ResultsView({
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
                 <td>{formatPercentage(results[factor].percentage)}</td>
-                <td className='italic'>{levelFor(results[factor].percentage)}</td>
               </tr>
             ))}
           </tbody>
