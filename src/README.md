@@ -12,12 +12,12 @@ grades the answers then shows `ResultsView`.
 | `generator.ts` + `generator.worker.ts` | In-browser LLM pipeline: `@huggingface/transformers` runs in a Web Worker                                                            |
 | `lib/scoring.ts`                       | Pure IPIP scoring: answers to factor totals and percentages                                                                          |
 | `lib/storage.ts`                       | localStorage session: answers, results, and the used-regenerate flag survive reload, old keys migrate, clears an hour after download |
-| `lib/markdown.ts`                      | Builds the TRAITS.md results file and triggers the download                                                                          |
+| `lib/exportMarkdown.ts`                | Builds the TRAITS.md results file and triggers the download                                                                          |
 | `lib/utils.ts`                         | Re-exports `cn` (npm package) per the shadcn convention                                                                              |
 | `components/`                          | App UI, mostly presentational; state lives in the hooks. `styles.ts` holds shared classes (`tableClass`, `buttonClass`)              |
 | `components/ui/`                       | shadcn primitives: not a dependency. `components.json` is the CLI manifest; re-add with `npx shadcn add` and re-apply edits          |
 | `data/items.ts`, `data/ratings.ts`     | The 50 IPIP items in display order and the five rating options; rating `value`s must not change                                      |
-| `factors.ts`                           | Big Five factor keys, display names, and interpretive levels                                                                         |
+| `factors.ts`                           | Big Five factor keys, display names, and percentage snapping/formatting for the UI and export                                        |
 
 ## Conventions
 

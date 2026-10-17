@@ -76,7 +76,7 @@ function readResults(): FactorResults | null {
     const { total, percentage } = entry
     if (typeof total !== 'number' || !Number.isFinite(total)) return null
     if (typeof percentage !== 'number' || !Number.isFinite(percentage)) return null
-    results[factor] = { total, percentage }
+    results[factor] = { total, average: total / 10, percentage }
   }
   return results
 }

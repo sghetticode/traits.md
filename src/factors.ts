@@ -20,6 +20,7 @@ export const factorNames: Record<Factor, string> = {
 
 export interface FactorResult {
     total: number
+    average: number
     percentage: number
 }
 

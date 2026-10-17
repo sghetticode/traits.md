@@ -5,8 +5,9 @@ export function buildMarkdown(results: FactorResults, description: string | null
   const lines = factors
     .map((factor) => {
       const name = factorNames[factor]
-      const percent = formatPercentage(results[factor].percentage)
-      return `  ${name}: ${percent}`
+      const score = results[factor].average
+      const pomp = formatPercentage(results[factor].percentage)
+      return `  ${name}: ${score}/5 (${pomp})`
     })
     .join('\n')
 
@@ -17,7 +18,7 @@ export function buildMarkdown(results: FactorResults, description: string | null
 
 ## Agent Instructions
 
-Use the personality description and trait percentages in this file's Frontmatter to shape your
+Use the personality description and the trait test scores in this file's Frontmatter to shape your
 interactions to the person you're working with.
 
 ### Personality Description
