@@ -5,20 +5,20 @@ export function buildMarkdown(results: FactorResults, description: string | null
   const lines = factors
     .map((factor) => {
       const name = factorNames[factor]
-      const score = results[factor].average
-      const pomp = formatPercentage(results[factor].percentage)
-      return `  ${name}: ${score}/5 (${pomp})`
+      const average = results[factor].average
+      const pomp = formatPercentage(results[factor].pomp)
+      return `${name}:\n  average: ${average}/5\n  pomp: (${pomp})`
     })
     .join('\n')
 
-  const frontmatter = `---\ntraits:\n${lines.toLowerCase()}\n---`
+  const frontmatter = `---\n${lines.toLowerCase()}\n---`
 
   let markdown = frontmatter + `\n
 # TRAITS.md
 
 ## Agent Instructions
 
-Use the personality description and the trait test scores in this file's Frontmatter to shape your
+Use the trait data in this file's Frontmatter along with the personality description to shape your
 interactions to the person you're working with.
 
 ### Personality Description
