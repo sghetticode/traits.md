@@ -25,36 +25,44 @@ export function ResultsView({
 }: ResultsViewProps) {
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col items-center justify-center p-6 gap-6
-        overflow-x-hidden overflow-y-auto bg-radial from-mist-600 to-mist-800 lg:p-7 lg:gap-7 
-        xl:p-8 xl:gap-8"
+      className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 gap-8
+        overflow-x-hidden overflow-y-auto bg-radial from-mist-600 to-mist-800"
     >
-      <h3
-        className="text-center underline underline-offset-3 text-2xl font-normal text-neutral-100 xl:text-[28px]"
+      <header
+        className="w-full max-w-md h-fit lg:max-w-lg rounded-b-xl bg-mist-400/75 pb-2 px-2"
       >
-        Your trait test scores
-      </h3>
+        <div className="bg-mist-500/50 rounded-b-2xl border border-mist-600/60 p-2">
+          <h3
+            className="text-center tracking-wider text-2xl font-medium text-neutral-100
+              lg:text-2xl"
+          >
+            Trait Test Results
+          </h3>
+        </div>
+      </header>
       <div
-        className="relative flex h-fit w-full max-w-xl flex-col rounded-xl bg-mist-400/75 p-3
-          shadow-md shadow-mist-900/60 lg:max-w-2xl lg:p-4 xl:max-w-3xl"
+        className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/75 p-3
+          shadow-md shadow-mist-900/60 md:max-w-152 lg:max-w-2xl"
       >
         <table
           className={cn(
             tableClass,
-            'rounded-lg border border-mist-600/60 bg-mist-500/50 [&_tr>*]:border-b-mist-600/30',
+            `table-auto rounded-2xl border border-mist-600/60 bg-mist-500/50
+            [&_th:last-child]:text-center [&_td:last-child]:text-center
+            [&_tr>*]:border-b-mist-600/30`,
           )}
         >
-          <thead className="text-lg text-neutral-100 xl:text-xl">
+          <thead className="text-lg text-neutral-100 tracking-widest lg:text-xl">
             <tr>
-              <th>Factor</th>
-              <th>Score</th>
+              <th>Factor (Trait)</th>
+              <th>Avg Response</th>
             </tr>
           </thead>
-          <tbody className="text-neutral-100 lg:text-lg">
+          <tbody className="text-base text-neutral-100 lg:text-lg">
             {factors.map((factor) => (
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
-                <td>{results[factor].average + '/5'}</td>
+                <td className="tracking-wide">{results[factor].average + ' of 5'}</td>
               </tr>
             ))}
           </tbody>
@@ -63,11 +71,11 @@ export function ResultsView({
       {description && (
         <div
           aria-busy={regenerating}
-          className="relative flex h-fit w-full max-w-xl flex-col rounded-lg bg-mist-400/80 p-3
-            shadow-md shadow-mist-900/60 lg:max-w-2xl lg:p-4 xl:max-w-3xl"
+          className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/80 p-3
+            shadow-md shadow-mist-900/60 md:max-w-208 lg:max-w-4xl"
         >
           <p
-            className="rounded-md border border-mist-600/40 bg-mist-500/70 p-4 text-justify
+            className="rounded-2xl border border-mist-600/40 bg-mist-500/70 p-4 text-justify
             text-neutral-100 lg:text-lg"
           >
             {description}
@@ -97,7 +105,7 @@ export function ResultsView({
           )}
         </div>
       )}
-      <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-3xl">
+      <div className="w-full max-w-xl md:max-w-208 lg:max-w-4xl mb-8">
         <h3
           className="mb-3 text-lg font-normal text-neutral-100 lg:text-xl"
         >
