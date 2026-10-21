@@ -1,20 +1,11 @@
 # Trait test scoring verification
 
-## Interpretive levels
+## Display formatting
 
-Each factor's percentage also maps to a level label via `levelFor()` in `src/factors.ts`.
-The level is derived from the *raw* percentage (before `Math.round`), so fractional
-results like 22.5% still land deterministically ("Low" below).
-
-| Raw percentage | Level    |
-| -------------- | -------- |
-| < 20           | Sparse   |
-| < 40           | Low      |
-| < 60           | Moderate |
-| < 80           | High     |
-| >= 80          | Dense    |
-
-The results table and downloaded `TRAITS.md` both render `Factor | Percent | Level`.
+`formatPercentage()` in `src/factors.ts` snaps raw percentages to 2.5% steps via `snapPercentage()`
+(same step size as `gradeTest()`), then formats them for display (whole percents when exact,
+otherwise one decimal). The results table and downloaded `TRAITS.md` frontmatter both use that
+formatted value; the UI table columns are `Factor | Percent`.
 
 ## On submit `gradeTest()` does the following
 
@@ -62,19 +53,15 @@ Plus a `console.table` rendering of the same data; example shows an all-"Neither
 ### Test area 1: Uniform runs
 
 Answer all 50 items the same way for a quick end-to-end check. Expected `{ total, percentage }`
-per factor, plus the level each percentage falls into:
+per factor (`total / formatted %`):
 
-| All items answered | EXT                    | AGR                    | CON                    | ES                     | II                     |
-| ------------------ | ---------------------- | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| **Way off**        | 30 / 50% / Moderate    | 26 / 40% / Moderate    | 26 / 40% / Moderate    | 42 / 80% / Dense       | 22 / 30% / Low         |
-| **Inaccurate**     | 30 / 50% / Moderate    | 28 / 45% / Moderate    | 28 / 45% / Moderate    | 36 / 65% / High        | 26 / 40% / Moderate    |
-| **Neither**        | 30 / 50% / Moderate    | 30 / 50% / Moderate    | 30 / 50% / Moderate    | 30 / 50% / Moderate    | 30 / 50% / Moderate    |
-| **Accurate**       | 30 / 50% / Moderate    | 32 / 55% / Moderate    | 32 / 55% / Moderate    | 24 / 35% / Low         | 34 / 60% / High        |
-| **Spot on**        | 30 / 50% / Moderate    | 34 / 60% / High        | 34 / 60% / High        | 18 / 20% / Low         | 38 / 70% / High        |
-
-Note: the level always comes from the raw percentage, and exact boundaries resolve to the
-higher adjacent level when they hit a threshold (e.g. 40% -> Moderate, 60% -> High,
-20% -> Low, 80% -> Dense).
+| All items answered | EXT        | AGR        | CON        | ES         | II         |
+| ------------------ | ---------- | ---------- | ---------- | ---------- | ---------- |
+| **Way off**        | 30 / 50%   | 26 / 40%   | 26 / 40%   | 42 / 80%   | 22 / 30%   |
+| **Inaccurate**     | 30 / 50%   | 28 / 45%   | 28 / 45%   | 36 / 65%   | 26 / 40%   |
+| **Neither**        | 30 / 50%   | 30 / 50%   | 30 / 50%   | 30 / 50%   | 30 / 50%   |
+| **Accurate**       | 30 / 50%   | 32 / 55%   | 32 / 55%   | 24 / 35%   | 34 / 60%   |
+| **Spot on**        | 30 / 50%   | 34 / 60%   | 34 / 60%   | 18 / 20%   | 38 / 70%   |
 
 Sanity properties to eyeball:
 
@@ -87,25 +74,25 @@ Sanity properties to eyeball:
 Confirms each factor's items route to the right bucket with the right key mix.
 Answer the target factor's items one way, everything else "Neither".
 
-Target factor all **Spot on** (others all "Neither", i.e. Moderate):
+Target factor all **Spot on** (others all "Neither", i.e. 50%):
 
-| Target factor         | Expected target result | Other 4 factors |
-| --------------------- | ---------------------- | --------------- |
-| Extraversion          | 30 / 50% / Moderate    | all 30 / 50% / Moderate |
-| Agreeableness         | 34 / 60% / High        | all 30 / 50% / Moderate |
-| Conscientiousness     | 34 / 60% / High        | all 30 / 50% / Moderate |
-| Emotional Stability   | 18 / 20% / Low         | all 30 / 50% / Moderate |
-| Intellect/Imagination | 38 / 70% / High        | all 30 / 50% / Moderate |
+| Target factor         | Expected target result | Other 4 factors      |
+| --------------------- | ---------------------- | -------------------- |
+| Extraversion          | 30 / 50%               | all 30 / 50%         |
+| Agreeableness         | 34 / 60%               | all 30 / 50%         |
+| Conscientiousness     | 34 / 60%               | all 30 / 50%         |
+| Emotional Stability   | 18 / 20%               | all 30 / 50%         |
+| Intellect/Imagination | 38 / 70%               | all 30 / 50%         |
 
-Target factor all **Way off** (others all "Neither", i.e. Moderate):
+Target factor all **Way off** (others all "Neither", i.e. 50%):
 
-| Target factor         | Expected target result | Other 4 factors |
-| --------------------- | ---------------------- | --------------- |
-| Extraversion          | 30 / 50% / Moderate    | all 30 / 50% / Moderate |
-| Agreeableness         | 26 / 40% / Moderate    | all 30 / 50% / Moderate |
-| Conscientiousness     | 26 / 40% / Moderate    | all 30 / 50% / Moderate |
-| Emotional Stability   | 42 / 80% / Dense       | all 30 / 50% / Moderate |
-| Intellect/Imagination | 22 / 30% / Low         | all 30 / 50% / Moderate |
+| Target factor         | Expected target result | Other 4 factors      |
+| --------------------- | ---------------------- | -------------------- |
+| Extraversion          | 30 / 50%               | all 30 / 50%         |
+| Agreeableness         | 26 / 40%               | all 30 / 50%         |
+| Conscientiousness     | 26 / 40%               | all 30 / 50%         |
+| Emotional Stability   | 42 / 80%               | all 30 / 50%         |
+| Intellect/Imagination | 22 / 30%               | all 30 / 50%         |
 
 Each item's `factor` and `sign` are listed in `src/data/items.ts`, so you can find which items
 belong to a factor there. The number shown in the app is the item's position in that array.
@@ -118,11 +105,11 @@ Baseline: all items "Neither" (every factor 30 / 50%). Change exactly one item:
 
 | Flip                                                        | Expected change | Expected factor result |
 | ----------------------------------------------------------- | --------------- | ---------------------- |
-| #1 "Am the life of the party." (EXT **+**) -> Spot on       | EXT +2          | 32 / 55% / Moderate    |
-| #1 -> Way off                                               | EXT -2          | 28 / 45% / Moderate    |
-| #2 "Feel little concern for others." (AGR **-**) -> Spot on | AGR **-2**      | 28 / 45% / Moderate    |
-| #2 -> Way off                                               | AGR **+2**      | 32 / 55% / Moderate    |
-| #4 "Get stressed out easily." (ES **-**) -> Spot on         | ES -2           | 28 / 45% / Moderate    |
+| #1 "Am the life of the party." (EXT **+**) -> Spot on       | EXT +2          | 32 / 55%               |
+| #1 -> Way off                                               | EXT -2          | 28 / 45%               |
+| #2 "Feel little concern for others." (AGR **-**) -> Spot on | AGR **-2**      | 28 / 45%               |
+| #2 -> Way off                                               | AGR **+2**      | 32 / 55%               |
+| #4 "Get stressed out easily." (ES **-**) -> Spot on         | ES -2           | 28 / 45%               |
 
 If minus-keyed factors move in the wrong direction, then they're not being reversed correctly.
 
@@ -130,5 +117,5 @@ If minus-keyed factors move in the wrong direction, then they're not being rever
 
 Requires answering by item key direction:
 
-- Every **+** item "Spot on" and every **-** item "Way off" -> every factor **50 / 100% / Dense**
-- Inverse (- "Spot on", + "Way off") -> every factor **10 / 0% / Sparse**
+- Every **+** item "Spot on" and every **-** item "Way off" -> every factor **50 / 100%**
+- Inverse (- "Spot on", + "Way off") -> every factor **10 / 0%**
