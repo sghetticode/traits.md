@@ -64,7 +64,7 @@ function readAnswers(): Answers {
   return answers
 }
 
-// Valid only with all five factors, each with a finite total and percentage
+// Valid only with all five factors, each with a finite total and pomp
 function readResults(): FactorResults | null {
   const stored = readJson('results')
   if (!isRecord(stored)) return null
@@ -73,10 +73,11 @@ function readResults(): FactorResults | null {
   for (const factor of factors) {
     const entry = stored[factor]
     if (!isRecord(entry)) return null
-    const { total, percentage } = entry
+    const { total } = entry
+    const pomp = entry.pomp ?? entry.percentage
     if (typeof total !== 'number' || !Number.isFinite(total)) return null
-    if (typeof percentage !== 'number' || !Number.isFinite(percentage)) return null
-    results[factor] = { total, average: total / 10, percentage }
+    if (typeof pomp !== 'number' || !Number.isFinite(pomp)) return null
+    results[factor] = { total, average: total / 10, pomp }
   }
   return results
 }

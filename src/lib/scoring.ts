@@ -38,13 +38,13 @@ export function gradeTest(answers: Answers, items: Item[] = allItems): FactorRes
     totals[item.factor] += scoreMap[rating]
   }
 
-  // Populate results obj with total, average, and percentage for each factor
+  // Populate results obj with total, average, and pomp for each factor
   const results = {} as FactorResults
 
-  // Scores for each factor: total (raw score), average (mean score), percentage (POMP score)
+  // Scores for each factor: total (raw score), average (mean score), pomp (POMP score)
   for (const factor of factors) {
     const total = totals[factor]
-    results[factor] = { total, average: total / 10, percentage: 2.5 * (total - 10) }
+    results[factor] = { total, average: total / 10, pomp: 2.5 * (total - 10) }
   }
 
   return results
@@ -58,7 +58,7 @@ export function logResults(results: FactorResults) {
       factor,
       total: results[factor].total,
       average: results[factor].average,
-      percentage: results[factor].percentage,
+      pomp: results[factor].pomp,
     })),
   )
 }
