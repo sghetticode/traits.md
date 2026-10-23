@@ -1,5 +1,5 @@
 import type { Message } from '@huggingface/transformers'
-import { factors, factorNames, formatPercentage, type FactorResults } from './factors'
+import { factors, factorNames, type FactorResults } from './factors'
 
 export type ProgressHandler = (status: string) => void
 
@@ -70,10 +70,12 @@ export function generateDescription(
     pendingReject = reject
     progressHandler = onProgress
 
-    const factorData = factors
+    const traitData = factors
       .map((factor) => {
-        const percentage = results[factor].percentage
-        return `${factorNames[factor]}: ${formatPercentage(percentage)}`
+        const name = factorNames[factor]
+        const average = results[factor].average
+        const pomp = results[factor].pomp
+        return `${name}:\n  average response: ${average}/5\n  percentage: ${pomp}`
       })
       .join('\n')
 
@@ -85,12 +87,13 @@ export function generateDescription(
           `Write a personality description using these rules:
           Text output:
           - write 5 sentences (one for each factor)
-          - never put score percentages in the description
+          - never put numeric scores in the description
           Writing style:
           - use present tense in second person (you/your)
-          - base adjective choice on trait test results`
+          - base adjective choice on trait test scores
+          - the tone should be observational`
       },
-      { role: 'user', content: factorData },
+      { role: 'user', content: traitData },
     ]
 
     onProgress('Preparing model...')
