@@ -19,9 +19,9 @@ export const factorNames: Record<Factor, string> = {
 }
 
 export interface FactorResult {
-    total: number
-    average: number
-    percentage: number
+    total: number // raw score
+    average: number // average response
+    pomp: number // percentage of max possible
 }
 
 export type FactorResults = Record<Factor, FactorResult>
@@ -30,14 +30,14 @@ export type FactorResults = Record<Factor, FactorResult>
 const FACTOR_PERCENT_STEP = 2.5
 
 // Normalize raw percentages to the 2.5% steps produced by gradeTest
-export function snapPercentage(percentage: number): number {
-    const units = Math.round(percentage / FACTOR_PERCENT_STEP)
+export function snapPercentage(pomp: number): number {
+    const units = Math.round(pomp / FACTOR_PERCENT_STEP)
     return units * FACTOR_PERCENT_STEP
 }
 
 // Snap and format for display (whole percentages else one decimal)
-export function formatPercentage(percentage: number): string {
-    const value = snapPercentage(percentage)
+export function formatPercentage(pomp: number): string {
+    const value = snapPercentage(pomp)
     const displayCents = Math.round(value * 100)
     if (displayCents % 100 === 0) return `${displayCents / 100}%`
     return `${(displayCents / 100).toFixed(1)}%`
