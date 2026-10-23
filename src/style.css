@@ -9,9 +9,7 @@
 
 @theme {
   --font-rubik: 'Rubik', ui-sans-serif;
-  /* The near-white of the original daisyUI dark theme, kept for the page text color, progress
-     fill and disabled button text */
-  --color-glacier: oklch(97.807% 0.029 256.847);
+  --text-neutral: oklch(92.2% 0 none);
 }
 
 /* Keeps labels aligned over radio columns */
@@ -67,11 +65,9 @@
 }
 
 @layer base {
-  /* What daisyUI's dark theme set on the page root: the background around and behind the body
-     (visible when overscrolling), dark browser UI, and thin scrollbars tinted by the text color */
   html {
-    background-color: oklch(25.33% 0.016 252.42);
-    color: var(--color-glacier);
+    background-color: oklch(27.5% 0.011 216.9);
+    color: var(--text-neutral);
     color-scheme: dark;
     scrollbar-color: color-mix(in oklch, currentColor 35%, transparent) transparent;
   }
