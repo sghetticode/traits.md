@@ -41,13 +41,13 @@ export function HowItWorksAccordion() {
               className="border-l-[3px] border-l-mist-400/80 pl-4 text-justify leading-normal
                 font-light lg:text-xl"
             >
-              The results of the trait test are separated into five factors, known as the "Big Five"
-              personality traits (extraversion, agreeableness, conscientiousness, emotional stability,
-              and intellect/imagination). Each factor score is determined by how you rank the test
-              statements. These values are passed to a local model running in the browser to
-              generate a description of your personality. Your results are saved to a TRAITS.md
-              file that's specific to you. Follow the steps on the results page to use your trait
-              data effectively.
+              The results of the trait test are separated into five factors, known as
+              the "Big Five" personality traits (extraversion, agreeableness, conscientiousness,
+              emotional stability, and intellect/imagination). This is a 50-item IPIP version of
+              Goldberg’s markers for the Big-Five factors. Your trait scores are passed to a
+              local model running in the browser to generate a description of your personality.
+              Your results are specific to you and can be downloaded as a TRAITS.md file. Follow
+              the steps on the results page to use your trait data effectively.
             </p>
           </AccordionContent>
         </AccordionItem>

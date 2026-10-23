@@ -17,7 +17,7 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
   const pageItems = items.slice(start, start + ITEMS_PER_PAGE)
 
   return (
-    <div className="h-full min-h-150">
+    <div className="h-full min-h-140">
       <table
         className={cn(
           tableClass,
@@ -75,8 +75,8 @@ function ItemRows({ item, position, value, onAnswer }: ItemRowsProps) {
   return (
     <>
       <tr>
-        <td>{position}</td>
-        <td id={textId}>{item.text}</td>
+        <td className="text-mist-600">{position}.</td>
+        <td id={textId} className="text-mist-600">{item.text}</td>
       </tr>
       <tr>
         <td></td>

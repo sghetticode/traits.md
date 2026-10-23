@@ -25,44 +25,43 @@ export function ResultsView({
 }: ResultsViewProps) {
   return (
     <div
-      className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 gap-8
-        overflow-x-hidden overflow-y-auto bg-radial from-mist-600 to-mist-800"
+      className="min-h-0 flex flex-1 flex-col items-center justify-center px-6 gap-6
+        overflow-x-hidden bg-radial from-mist-600 to-mist-800"
     >
       <header
-        className="w-full max-w-md h-fit lg:max-w-lg rounded-b-xl bg-mist-400/75 pb-2 px-2"
+        className="w-full h-fit min-h-16 flex items-center justify-center px-4 mt-4 mx-4 rounded-2xl
+        bg-mist-500/80 border-b border-l border-mist-400/80 sm:max-w-sm lg:max-w-md"
       >
-        <div className="bg-mist-500/50 rounded-b-2xl border border-mist-600/60 p-2">
-          <h3
-            className="text-center tracking-wider text-2xl font-medium text-neutral-100
-              lg:text-2xl"
-          >
-            Trait Test Results
-          </h3>
-        </div>
+        <h3
+          className="tracking-wider text-2xl font-medium text-mist-300/85
+          lg:text-[1.625rem]"
+        >
+          Your Trait Test Results
+        </h3>
       </header>
       <div
-        className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/75 p-3
-          shadow-md shadow-mist-900/60 md:max-w-152 lg:max-w-2xl"
+        className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/75 p-3
+          shadow-sm shadow-mist-900/50 sm:max-w-lg lg:max-w-xl"
       >
         <table
           className={cn(
             tableClass,
             `table-auto rounded-2xl border border-mist-600/60 bg-mist-500/50
             [&_th:last-child]:text-center [&_td:last-child]:text-center
-            [&_tr>*]:border-b-mist-600/30`,
+            [&_tr>*]:border-b-mist-600/40`,
           )}
         >
-          <thead className="text-lg text-neutral-100 tracking-widest lg:text-xl">
+          <thead className="text-lg tracking-wider text-mist-800/75 lg:text-xl">
             <tr>
               <th>Factor (Trait)</th>
               <th>Avg Response</th>
             </tr>
           </thead>
-          <tbody className="text-base text-neutral-100 lg:text-lg">
+          <tbody className="text-base text-mist-700 lg:text-lg">
             {factors.map((factor) => (
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
-                <td className="tracking-wide">{results[factor].average + ' of 5'}</td>
+                <td className="tracking-wide italic">{results[factor].average + ' of 5'}</td>
               </tr>
             ))}
           </tbody>
@@ -71,12 +70,12 @@ export function ResultsView({
       {description && (
         <div
           aria-busy={regenerating}
-          className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/80 p-3
-            shadow-md shadow-mist-900/60 md:max-w-208 lg:max-w-4xl"
+          className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/70 p-3
+            shadow-sm shadow-mist-900/50 sm:max-w-2xl lg:max-w-3xl"
         >
           <p
-            className="rounded-2xl border border-mist-600/40 bg-mist-500/70 p-4 text-justify
-            text-neutral-100 lg:text-lg"
+            className="rounded-2xl border border-mist-600/70 bg-mist-500/45 p-4 text-justify
+              text-mist-700 text-lg lg:text-xl"
           >
             {description}
           </p>
@@ -105,14 +104,14 @@ export function ResultsView({
           )}
         </div>
       )}
-      <div className="w-full max-w-xl md:max-w-208 lg:max-w-4xl mb-8">
+      <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mb-8 text-neutral-200/80">
         <h3
-          className="mb-3 text-lg font-normal text-neutral-100 lg:text-xl"
+          className="mb-3 text-lg font-normal lg:text-xl"
         >
           To use your traits with an agent:
         </h3>
         <ol
-          className="list-inside list-decimal space-y-2 text-base text-neutral-100 lg:text-lg"
+          className="list-inside list-decimal space-y-2 text-base lg:text-lg"
         >
           <li>
             Download your

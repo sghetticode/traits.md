@@ -9,11 +9,11 @@ interface InstructionsPanelProps {
 
 export function InstructionsPanel({ started, onStart }: InstructionsPanelProps) {
   return (
-    <div className="grid h-full min-h-150 place-content-center place-items-center gap-5 text-center">
-      <h3 className="text-3xl font-medium text-mist-600/90 lg:text-[2.125rem] xl:text-4xl">
+    <div className="grid h-full min-h-140 place-content-center place-items-center gap-5 text-center">
+      <h3 className="text-3xl font-medium text-mist-600 lg:text-[2.125rem] xl:text-4xl">
         Instructions
       </h3>
-      <p className="max-w-9/10 text-xl text-justify leading-normal text-mist-600/90 lg:text-[1.375rem] xl:text-2xl">
+      <p className="max-w-9/10 text-xl text-justify leading-normal text-mist-600 lg:text-[1.375rem] xl:text-2xl">
         The test takes about 6 minutes to finish when you take your time. Rank each statement as
         either
         <span className="font-medium"> way off</span>,

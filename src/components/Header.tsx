@@ -1,18 +1,19 @@
 export function Header() {
   return (
     <header
-      className="relative mx-4 flex h-fit min-h-16 w-auto flex-col items-start gap-1 rounded-b-4xl
-        border-b-[1.5px] border-b-mist-800/75 bg-mist-600/60 py-3 pr-4 pl-5 sm:mx-6 sm:flex-row
-        sm:items-baseline sm:gap-0 lg:mx-8"
+      className="relative w-auto h-fit min-h-16 mt-4 mx-4 flex flex-col gap-1 pt-2 pb-1
+        pl-4 bg-mist-600/80 text-mist-300/85 rounded-[20px] border-b border-l
+        border-mist-500/80 shadow-md shadow-mist-900/50 sm:flex-row sm:items-baseline sm:gap-0
+        lg:pt-4 lg:pb-3"
     >
-      <h1 className="text-4xl/none font-medium text-neutral-100/90 lg:text-6xl/none">TRAITS.md</h1>
-      <span
-        className="font-light text-mist-400/60 max-md:hidden md:pr-1 md:pl-2 md:text-3xl lg:pr-2
-          lg:pl-3 lg:text-5xl"
+      <h1
+        className="text-center text-[2.75rem] font-medium pr-3 lg:pr-4 lg:text-left lg:text-6xl"
       >
-        /
-      </span>
-      <h2 className="font-normal text-neutral-100/80 max-md:hidden md:text-2xl lg:text-[1.75rem]">
+        TRAITS.md
+      </h1>
+      <h2
+        className="italic tracking-wide max-md:hidden md:text-[1.375rem] lg:text-[1.875rem]"
+      >
         Let your agent get acquainted with you
       </h2>
     </header>

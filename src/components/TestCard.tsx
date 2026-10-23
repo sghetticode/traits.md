@@ -27,15 +27,15 @@ export function TestCard({ state, progressText, ...actions }: TestCardProps) {
   return (
     <div
       id="trait-test"
-      className="relative flex min-h-150 w-full flex-col rounded-xl bg-mist-400 px-2 py-1"
+      className="relative flex min-h-140 w-full flex-col rounded-xl bg-mist-400/90"
     >
-      <div className="relative flex min-h-0 flex-auto flex-col gap-2 p-6 text-sm max-sm:px-2">
+      <div className="relative flex min-h-0 flex-auto flex-col gap-3 p-6 text-sm max-sm:px-2">
         <Progress
           aria-label="Test progress"
           value={(answeredCount(answers) / items.length) * 100}
-          className="bg-glacier/20 *:bg-glacier h-2 shrink-0 rounded-lg *:rounded-lg"
+          className="bg-mist-500/60 *:bg-mist-300/80 h-2 shrink-0 rounded-lg *:rounded-lg"
         />
-        <div className="relative h-150 max-h-150 min-h-0 flex-1 overflow-y-auto">
+        <div className="relative h-140 max-h-140 min-h-0 flex-1">
           {page === 0 && <InstructionsPanel started={started} onStart={actions.onStart} />}
           {page >= 1 && page < LAST_PAGE && (
             <ItemPanel page={page} answers={answers} onAnswer={actions.onAnswer} />
