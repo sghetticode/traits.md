@@ -23,7 +23,6 @@ export type TestAction =
   | { type: 'prev' }
   | { type: 'submit'; results: FactorResults }
   | { type: 'scored'; description: string | null }
-  | { type: 'regenerated'; description: string }
 
 const clampPage = (page: number) => Math.min(LAST_PAGE, Math.max(0, page))
 
@@ -42,7 +41,7 @@ export function testReducer(state: TestState, action: TestAction): TestState {
       return { ...state, page: clampPage(state.page - 1) }
     case 'submit':
       // Answers stay until scoring ends, so the progress bar stays full while the model runs
-      return { ...state, results: action.results, status: 'scoring', regenerated: false }
+      return { ...state, results: action.results, status: 'scoring' }
     case 'scored':
       return {
         ...state,
@@ -52,8 +51,6 @@ export function testReducer(state: TestState, action: TestAction): TestState {
         started: false,
         page: 0,
       }
-    case 'regenerated':
-      return { ...state, description: action.description, regenerated: true }
   }
 }
 
@@ -63,12 +60,12 @@ function init(): TestState {
 
 export function useTraitTest() {
   const [state, dispatch] = useReducer(testReducer, undefined, init)
-  const { started, page, answers, results, description, regenerated } = state
+  const { started, page, answers, results, description } = state
 
   // The only writer of these session keys; runs after any of them changes
   useEffect(() => {
-    saveSession({ started, page, answers, results, description, regenerated })
-  }, [started, page, answers, results, description, regenerated])
+    saveSession({ started, page, answers, results, description })
+  }, [started, page, answers, results, description])
 
   return {
     state,
@@ -105,10 +102,6 @@ export function useTraitTest() {
     },
     scored(description: string | null) {
       dispatch({ type: 'scored', description })
-    },
-    // Swap in the regenerated description and use up the single allowed regenerate
-    regenerated(description: string) {
-      dispatch({ type: 'regenerated', description })
     },
   }
 }

@@ -11,7 +11,7 @@ import { generateDescription, preloadGenerator } from '@/generator'
 export function useDescriptionGenerator() {
   // Status line shown under spinner ("Downloading model..., "Generating description...")
   const [progressText, setProgressText] = useState('')
-  // True while a generation is in flight, so callers can ignore clicks that would overlap it
+  // True while a generation is in flight; App does not read this (supersession is in generateDescription)
   const [busy, setBusy] = useState(false)
 
   async function generate(results: FactorResults) {

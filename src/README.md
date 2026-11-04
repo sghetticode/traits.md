@@ -11,7 +11,7 @@ grades the answers then shows `ResultsView`.
 | `hooks/useDescriptionGenerator.ts`     | LLM status for the UI (`preload`, `generate`, `progressText`); calls stay in event handlers, not effects                             |
 | `generator.ts` + `generator.worker.ts` | In-browser LLM pipeline: `@huggingface/transformers` runs in a Web Worker                                                            |
 | `lib/scoring.ts`                       | Pure IPIP scoring: answers to factor totals and percentages                                                                          |
-| `lib/storage.ts`                       | localStorage session: answers, results, and the used-regenerate flag survive reload, old keys migrate, clears an hour after download |
+| `lib/storage.ts`                       | localStorage session: answers and results survive reload, old keys migrate, clears an hour after download |
 | `lib/exportMarkdown.ts`                | Builds the TRAITS.md results file and triggers the download                                                                          |
 | `lib/utils.ts`                         | Re-exports `cn` (npm package) per the shadcn convention                                                                              |
 | `components/`                          | App UI, mostly presentational; state lives in the hooks. `styles.ts` holds shared classes (`tableClass`, `buttonClass`)              |

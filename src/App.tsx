@@ -1,5 +1,5 @@
 /*
- Show intro and test UI until submit grades answers and reveals ResultsView.
+ Display test card and intro/how it works section until test is submitted and reveals ResultsView.
  State lives in the two hooks, see src/README.md for the app's source map.
 */
 
@@ -37,17 +37,6 @@ export function App() {
     }
   }
 
-  async function handleRegenerate() {
-    if (!state.results || state.regenerated || generator.busy) return
-    try {
-      console.log('Regenerating personality description...')
-      test.regenerated(await generator.generate(state.results))
-    } catch (err) {
-      // Keep the current description rather than removing it
-      console.error('Error regenerating description. Keeping the current description.\n', err)
-    }
-  }
-
   function handleDownload() {
     if (!state.results) return
     console.log('Downloading TRAITS.md file...')
@@ -62,10 +51,6 @@ export function App() {
           results={state.results}
           description={state.description}
           onDownload={handleDownload}
-          onRegenerate={handleRegenerate}
-          regenerating={generator.busy}
-          regenerated={state.regenerated}
-          progressText={generator.progressText}
         />
       ) : (
         <>
@@ -76,8 +61,8 @@ export function App() {
               lg:gap-y-4"
           >
             <h2
-              className="text-[1.375rem] font-normal text-neutral-100/80 text-center max-sm:mx-auto sm:pl-5
-                sm:text-2xl md:hidden"
+              className="text-[1.375rem] font-normal italic text-mist-300/80 text-center
+                max-sm:mx-auto sm:text-left sm:pl-1 sm:text-2xl md:hidden"
             >
               Let your agent get acquainted with you
             </h2>

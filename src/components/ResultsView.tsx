@@ -1,27 +1,18 @@
 import { cn } from '@/lib/utils'
 import { factors, factorNames, type FactorResults } from '@/factors'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
 import { buttonClass, tableClass } from '@/components/styles'
 
 interface ResultsViewProps {
   results: FactorResults
   description: string | null
   onDownload: () => void
-  onRegenerate: () => void
-  regenerating: boolean
-  regenerated: boolean
-  progressText: string
 }
 
 export function ResultsView({
   results,
   description,
   onDownload,
-  onRegenerate,
-  regenerating,
-  regenerated,
-  progressText,
 }: ResultsViewProps) {
   return (
     <div
@@ -69,7 +60,6 @@ export function ResultsView({
       </div>
       {description && (
         <div
-          aria-busy={regenerating}
           className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/70 p-3
             shadow-sm shadow-mist-900/50 sm:max-w-2xl lg:max-w-3xl"
         >
@@ -79,29 +69,6 @@ export function ResultsView({
           >
             {description}
           </p>
-          {/* Regen btn goes away after one use */}
-          {!regenerated && (
-            <div className="mt-3 flex items-center justify-end gap-3">
-              {regenerating && (
-                <p className="sr-only" role="status">
-                  {progressText}
-                </p>
-              )}
-              <Button
-                variant="ghost"
-                disabled={regenerating}
-                onClick={onRegenerate}
-                className={cn(
-                  buttonClass,
-                  'h-9 w-fit rounded-xl border border-mist-600/70 bg-mist-500/70 p-3',
-                  'text-sm font-normal lg:text-base hover:bg-mist-500 hover:text-inherit',
-                )}
-              >
-                {regenerating && <Spinner aria-hidden role="presentation" />}
-                Regenerate description
-              </Button>
-            </div>
-          )}
         </div>
       )}
       <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mb-8 text-neutral-200/80">
