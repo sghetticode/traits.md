@@ -21,10 +21,10 @@ export function ResultsView({
     >
       <header
         className="w-full h-fit min-h-16 flex items-center justify-center px-4 mt-4 mx-4 rounded-2xl
-        bg-mist-500/80 border-b border-l border-mist-400/80 sm:max-w-sm lg:max-w-md"
+        bg-mist-500/80 border-b border-l border-mist-400/60 sm:max-w-sm lg:max-w-md"
       >
         <h3
-          className="tracking-wider text-2xl font-medium text-mist-300/85
+          className="tracking-wider text-2xl font-medium text-mist-300/80
           lg:text-[1.625rem]"
         >
           Your Trait Test Results
@@ -32,7 +32,7 @@ export function ResultsView({
       </header>
       <div
         className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/75 p-3
-          shadow-sm shadow-mist-900/50 sm:max-w-lg lg:max-w-xl"
+          sm:max-w-lg lg:max-w-xl"
       >
         <table
           className={cn(
@@ -45,14 +45,14 @@ export function ResultsView({
           <thead className="text-lg tracking-wider text-mist-800/75 lg:text-xl">
             <tr>
               <th>Factor (Trait)</th>
-              <th>Avg Response</th>
+              <th>Average Score</th>
             </tr>
           </thead>
-          <tbody className="text-base text-mist-700 lg:text-lg">
+          <tbody className="text-base text-mist-800/75 lg:text-lg">
             {factors.map((factor) => (
               <tr key={factor}>
                 <td>{factorNames[factor]}</td>
-                <td className="tracking-wide italic">{results[factor].average + ' of 5'}</td>
+                <td className="tracking-widest">{results[factor].average + ' / 5'}</td>
               </tr>
             ))}
           </tbody>
@@ -60,18 +60,18 @@ export function ResultsView({
       </div>
       {description && (
         <div
-          className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/70 p-3
-            shadow-sm shadow-mist-900/50 sm:max-w-2xl lg:max-w-3xl"
+          className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/80 p-3
+            sm:max-w-2xl lg:max-w-3xl"
         >
           <p
-            className="rounded-2xl border border-mist-600/70 bg-mist-500/45 p-4 text-justify
-              text-mist-700 text-lg lg:text-xl"
+            className="rounded-2xl border border-mist-600/70 bg-mist-500/75 p-4 text-justify
+              text-neutral-300/75 text-lg lg:text-xl"
           >
             {description}
           </p>
         </div>
       )}
-      <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mb-8 text-neutral-200/80">
+      <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mb-8 text-neutral-200/90">
         <h3
           className="mb-3 text-lg font-normal lg:text-xl"
         >
@@ -88,7 +88,7 @@ export function ResultsView({
               className={cn(
                 buttonClass,
                 'h-9 rounded-2xl border-none bg-mist-500/75 ml-2 p-3 text-sm font-normal',
-                'shadow-md shadow-mist-900/60 hover:bg-mist-500 hover:text-inherit lg:h-10',
+                'shadow-sm shadow-mist-900/60 hover:bg-mist-500 hover:text-inherit lg:h-10',
                 'lg:text-base',
               )}
             >
