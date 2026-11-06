@@ -27,13 +27,14 @@ export function TestCard({ state, progressText, ...actions }: TestCardProps) {
   return (
     <div
       id="trait-test"
-      className="relative flex min-h-140 w-full flex-col rounded-xl bg-mist-400/90"
+      className="relative flex min-h-140 w-full flex-col rounded-xl bg-mist-400/90
+        md:max-lg:w-9/10 md:max-lg:mx-auto"
     >
       <div className="relative flex min-h-0 flex-auto flex-col gap-3 p-6 text-sm max-sm:px-2">
         <Progress
           aria-label="Test progress"
           value={(answeredCount(answers) / items.length) * 100}
-          className="bg-mist-500/60 *:bg-mist-300/80 h-2 shrink-0 rounded-lg *:rounded-lg"
+          className="h-2 shrink-0 rounded-lg bg-mist-500/60 *:rounded-lg *:bg-mist-300/80"
         />
         <div className="relative h-140 max-h-140 min-h-0 flex-1">
           {page === 0 && <InstructionsPanel started={started} onStart={actions.onStart} />}

@@ -56,13 +56,13 @@ export function App() {
         <>
           <Header />
           <main
-            className="mx-6 mt-7 mb-5 flex flex-1 flex-col gap-6 sm:mx-8 md:mt-9 lg:mx-10 lg:grid
-              lg:grid-cols-[minmax(0,5fr)_minmax(18rem,4fr)] lg:grid-rows-[auto_1fr] lg:gap-x-6
-              lg:gap-y-4"
+            className="mx-9 mt-8 mb-25 flex flex-1 flex-col gap-6 md:mt-12 lg:mx-9 lg:grid
+              lg:grid-cols-[minmax(0,5fr)_minmax(18rem,4fr)] lg:grid-rows-[auto_1fr] lg:gap-x-7
+              lg:gap-y-5"
           >
             <h2
-              className="text-[1.375rem] font-normal italic text-mist-300/80 text-center
-                max-sm:mx-auto sm:text-left sm:pl-1 sm:text-2xl md:hidden"
+              className="text-center text-[1.375rem] font-normal text-mist-300/80 italic
+                max-sm:mx-auto sm:pl-1 sm:text-2xl md:hidden"
             >
               Let your agent get acquainted with you
             </h2>
