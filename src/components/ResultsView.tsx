@@ -1,7 +1,5 @@
-import { cn } from '@/lib/utils'
 import { factors, factorNames, type FactorResults } from '@/factors'
 import { Button } from '@/components/ui/button'
-import { buttonClass, tableClass } from '@/components/styles'
 
 interface ResultsViewProps {
   results: FactorResults
@@ -9,38 +7,29 @@ interface ResultsViewProps {
   onDownload: () => void
 }
 
-export function ResultsView({
-  results,
-  description,
-  onDownload,
-}: ResultsViewProps) {
+export function ResultsView({ results, description, onDownload }: ResultsViewProps) {
   return (
     <div
-      className="min-h-0 flex flex-1 flex-col items-center justify-center px-6 gap-6
-        overflow-x-hidden bg-radial from-mist-600 to-mist-800"
+      className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-x-hidden
+        bg-radial from-mist-600 to-mist-800 px-6"
     >
       <header
-        className="w-full h-fit min-h-16 flex items-center justify-center px-4 mt-4 mx-4 rounded-2xl
-        bg-mist-500/80 border-b border-l border-mist-400/60 sm:max-w-sm lg:max-w-md"
+        className="mx-4 mt-4 flex h-fit min-h-16 w-full items-center justify-center rounded-2xl
+          border-b border-l border-mist-400/60 bg-mist-500/80 px-4 sm:max-w-sm lg:max-w-md"
       >
-        <h3
-          className="tracking-wider text-2xl font-medium text-mist-300/80
-          lg:text-[1.625rem]"
-        >
+        <h3 className="text-2xl font-medium tracking-wider text-mist-300/80 lg:text-[1.625rem]">
           Your Trait Test Results
         </h3>
       </header>
       <div
-        className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/75 p-3
-          sm:max-w-lg lg:max-w-xl"
+        className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/75 p-3 sm:max-w-lg
+          lg:max-w-xl"
       >
         <table
-          className={cn(
-            tableClass,
-            `table-auto rounded-2xl border border-mist-600/60 bg-mist-500/50
-            [&_th:last-child]:text-center [&_td:last-child]:text-center
-            [&_tr>*]:border-b-mist-600/40`,
-          )}
+          className={`table-auto rounded-2xl border border-mist-600/60 bg-mist-500/50
+            [&_td:last-child]:text-center [&_th:last-child]:text-center
+            [&_tr>*]:border-b-mist-600/40`
+          }
         >
           <thead className="text-lg tracking-wider text-mist-800/75 lg:text-xl">
             <tr>
@@ -60,37 +49,32 @@ export function ResultsView({
       </div>
       {description && (
         <div
-          className="relative w-full h-fit flex flex-col rounded-xl bg-mist-400/80 p-3
+          className="relative flex h-fit w-full flex-col rounded-xl bg-mist-400/80 p-3
             sm:max-w-2xl lg:max-w-3xl"
         >
           <p
             className="rounded-2xl border border-mist-600/70 bg-mist-500/75 p-4 text-justify
-              text-neutral-300/75 text-lg lg:text-xl"
+              text-lg text-neutral-300/75 lg:text-xl"
           >
             {description}
           </p>
         </div>
       )}
-      <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mb-8 text-neutral-200/90">
-        <h3
-          className="mb-3 text-lg font-normal lg:text-xl"
-        >
-          To use your traits with an agent:
-        </h3>
-        <ol
-          className="list-inside list-decimal space-y-2 text-base lg:text-lg"
-        >
+      <div className="mb-8 w-full max-w-xl text-neutral-200/90 sm:max-w-2xl lg:max-w-3xl">
+        <h3 className="mb-3 text-lg font-normal lg:text-xl">To use your traits with an agent:</h3>
+        <ol className="list-inside list-decimal space-y-2 text-base lg:text-lg">
           <li>
             Download your
             <Button
-              variant="ghost"
+              type="button"
               onClick={onDownload}
-              className={cn(
-                buttonClass,
-                'h-9 rounded-2xl border-none bg-mist-500/75 ml-2 p-3 text-sm font-normal',
-                'shadow-sm shadow-mist-900/60 hover:bg-mist-500 hover:text-inherit lg:h-10',
-                'lg:text-base',
-              )}
+              aria-label="Download your TRAITS.md"
+              variant="ghost"
+              className={`cursor-pointer font-semibold text-shadow-[0_0.5px_oklch(100%_0_0/0.15)]
+                disabled:opacity-100 disabled:text-glacier/20 ml-2 h-9 rounded-2xl border-none
+                bg-mist-500/75 text-sm shadow-sm shadow-mist-900/60 hover:bg-mist-500
+                hover:text-inherit lg:h-10 lg:text-base`
+              }
             >
               TRAITS.md
             </Button>
