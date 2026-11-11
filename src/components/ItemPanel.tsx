@@ -2,7 +2,6 @@ import { cn } from '@/lib/utils'
 import { items, ITEMS_PER_PAGE, type Item } from '@/data/items'
 import { RATINGS, type Rating } from '@/data/ratings'
 import type { Answers } from '@/lib/scoring'
-import { tableClass } from '@/components/styles'
 import { RatingRadioGroup } from '@/components/RatingRadioGroup'
 
 interface ItemPanelProps {
@@ -19,11 +18,11 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
   return (
     <div className="h-full min-h-140">
       <table
-        className={cn(
-          tableClass,
-          'table-fixed text-sm md:text-base 2xl:text-lg [&_tr>*]:border-b-mist-500/50',
-          'max-sm:[&_tr>*]:px-1',
-        )}
+        className={`w-full border-separate border-spacing-0 text-left [&_thead]:font-semibold
+          [&_thead]:whitespace-nowrap [&_tr>*]:px-4 [&_tr>*]:py-3 [&_tr>*]:align-middle
+          [&_thead_tr>*]:border-b [&_tbody_tr:not(:last-child)>*]:border-b table-fixed text-sm
+          md:text-base 2xl:text-lg [&_tr>*]:border-b-mist-500/50 max-sm:[&_tr>*]:px-1`
+        }
       >
         <colgroup>
           <col className="w-8 sm:w-12" />
@@ -34,8 +33,8 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
             <th scope="col" aria-label="Rating"></th>
             <th>
               <div
-                className="rating-grid mb-2 text-xs leading-tight wrap-break-word
-                  whitespace-normal md:text-sm xl:text-base"
+                className="rating-grid mb-2 text-xs leading-tight wrap-break-word whitespace-normal
+                  md:text-sm xl:text-base"
               >
                 {RATINGS.map((rating) => (
                   <span key={rating.value} className={cn('w-full text-center', rating.header)}>
@@ -76,7 +75,9 @@ function ItemRows({ item, position, value, onAnswer }: ItemRowsProps) {
     <>
       <tr>
         <td className="text-mist-600">{position}.</td>
-        <td id={textId} className="text-mist-600">{item.text}</td>
+        <td id={textId} className="text-mist-600">
+          {item.text}
+        </td>
       </tr>
       <tr>
         <td></td>

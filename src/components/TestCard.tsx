@@ -19,7 +19,7 @@ interface TestCardProps {
   onSubmit: () => void
 }
 
-// Progress bar, current page (instructions, items, or submit), and page navigation
+// Progress bar, current page (instructions, test, or submit), and page nav
 export function TestCard({ state, progressText, ...actions }: TestCardProps) {
   const { started, page, answers, status } = state
   const scoring = status === 'scoring'
@@ -34,7 +34,7 @@ export function TestCard({ state, progressText, ...actions }: TestCardProps) {
         <Progress
           aria-label="Test progress"
           value={(answeredCount(answers) / items.length) * 100}
-          className="h-2 shrink-0 rounded-lg bg-mist-500/60 *:rounded-lg *:bg-mist-300/80"
+          className="h-2 shrink-0 rounded-lg bg-mist-500/70 *:rounded-lg *:bg-mist-300/80"
         />
         <div className="relative h-140 max-h-140 min-h-0 flex-1">
           {page === 0 && <InstructionsPanel started={started} onStart={actions.onStart} />}

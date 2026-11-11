@@ -4,7 +4,6 @@ import { items } from '@/data/items'
 import { answeredCount, type Answers } from '@/lib/scoring'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import { buttonClass } from '@/components/styles'
 
 interface SubmitPanelProps {
   answers: Answers
@@ -32,12 +31,12 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
           className="grid h-full min-h-138 place-content-center place-items-center gap-5
             2xl:min-h-150"
         >
-          <span className="text-lg font-medium text-mist-600 sm:text-xl xl:text-2xl 2xl:text-3xl">
+          <span className="text-xl font-medium text-mist-600 md:text-2xl">
             Scoring your trait test
           </span>
           <Spinner className="size-8" />
           <p
-            className="text-sm text-mist-600 italic sm:text-base xl:text-lg 2xl:text-xl"
+            className="text-base text-mist-600 italic md:text-xl"
             role="status"
           >
             {progressText}
@@ -45,7 +44,7 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
         </div>
       ) : (
         <>
-          <h3 className="text-xl font-medium text-mist-600/90 sm:text-2xl xl:text-3xl 2xl:text-4xl">
+          <h3 className="text-2xl font-medium text-mist-600/90 md:text-3xl">
             Submit your trait test
           </h3>
           {remaining > 0 && (
@@ -57,15 +56,15 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
             </p>
           )}
           <Button
-            variant="ghost"
             type="button"
-            disabled={remaining > 0}
             onClick={onSubmit}
-            className={cn(
-              buttonClass,
-              'mt-4 h-12 rounded-md border-none bg-mist-500/70 p-3 text-lg font-normal shadow-none',
-              'hover:bg-mist-500/90',
-            )}
+            aria-label="Submit test"
+            disabled={remaining > 0}
+            variant="ghost"
+            className={`cursor-pointer font-semibold text-shadow-[0_0.5px_oklch(100%_0_0/0.15)]
+              disabled:opacity-100 disabled:text-glacier/20 mt-4 h-12 rounded-md border-none
+              bg-mist-500/70 p-3 text-lg shadow-none hover:bg-mist-500/90`
+            }
           >
             Submit
           </Button>
