@@ -1,20 +1,35 @@
 import { env, pipeline, type Message, type TextGenerationPipeline } from '@huggingface/transformers'
 
-const MODEL_ID = 'onnx-community/LFM2-1.2B-ONNX'
+const MODEL_ID = 'onnx-community/LFM3-1.7B-ONNX'
 // q4f16 needs WebGPU shader-f16 support, q4 fallback
 const DTYPE_FOR = { wasm: 'q8', webgpu: 'q4', 'webgpu-f16': 'q4f16' } as const
 
 type Backend = keyof typeof DTYPE_FOR
 
-// Events this worker sends to the main thread
+// Events this worker sends to the main thread:
 type WorkerEvent =
   | { type: 'progress'; file: string; percent: number }
-  | { type: 'generating' }
+  | { type: 'generating'; label: string }
   | { type: 'result'; text: string }
   | { type: 'error'; message: string }
 
+type GenerationOptions = {
+  do_sample?: boolean
+  temperature?: number
+  repetition_penalty?: number
+  max_new_tokens?: number
+  tokenizer_encode_kwargs?: { enable_thinking?: boolean }
+}
+
 // Commands the main thread sends in
-type WorkerCommand = { type: 'load' } | { type: 'generate'; messages: Message[] }
+type WorkerCommand =
+  | { type: 'load' }
+  | {
+      type: 'generate'
+      messages: Message[]
+      label?: string
+      options?: GenerationOptions
+    }
 
 // Self is typed as Window under the project's DOM lib so cast to worker global shape
 const workerScope = self as unknown as {
@@ -37,7 +52,7 @@ async function detectBackend(): Promise<Backend> {
 }
 
 function configureWasm() {
-  const threads = self.crossOriginIsolated ? navigator.hardwareConcurrency ?? 1 : 1
+  const threads = self.crossOriginIsolated ? (navigator.hardwareConcurrency ?? 1) : 1
   if (!self.crossOriginIsolated) {
     console.warn('Generator: Not cross-origin isolated. Falling back to single-threaded WASM...')
   }
@@ -58,9 +73,9 @@ export function getGenerator(): Promise<TextGenerationPipeline> {
         dtype: DTYPE_FOR[backend],
         progress_callback: (data) => {
           if (data.status !== 'progress' || data.total <= 0) return
-
+          // Calculate percentage and log progress
           const percent = Math.floor((data.loaded / data.total) * 100)
-          const bucket = Math.floor(percent / 10) * 10
+          const bucket = Math.floor(percent / 25) * 25
           if (bucket > (lastLoggedPercent.get(data.file) ?? -1)) {
             lastLoggedPercent.set(data.file, bucket)
             console.log(`Generator: Downloading ${data.file}: ${bucket}%`)
@@ -87,16 +102,21 @@ workerScope.onmessage = async (ev) => {
       return
     }
 
-    // Generate: reuse in-flight or ready pipeline, no re-download after preload
     const generator = await getGenerator()
-    workerScope.postMessage({ type: 'generating' })
+    workerScope.postMessage({
+      type: 'generating',
+      label: command.label ?? 'Generating description...',
+    })
 
     const output = await generator(command.messages, {
+      max_new_tokens: 256,
+      tokenizer_encode_kwargs: { enable_thinking: false },
+      // Sampling and logits params for text generation
       do_sample: true,
       temperature: 0.4,
-      top_p: 0.9,
-      repetition_penalty: 1.05,
-      max_new_tokens: 512,
+      top_k: 50,
+      repetition_penalty: 1.03,
+      ...command.options,
     })
 
     const content = output[0].generated_text.at(-1)?.content
