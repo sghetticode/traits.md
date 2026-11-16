@@ -1,13 +1,13 @@
-import { factors, factorNames, formatPercentage, type FactorResults } from '@/factors'
+import { factors, factorNames, formatPercentage, setRange, type FactorResults } from '@/factors'
 
 // Build traits Markdown file with Frontmatter
 export function buildMarkdown(results: FactorResults, description: string | null): string {
   const lines = factors
     .map((factor) => {
       const name = factorNames[factor]
-      const average = results[factor].average
       const pomp = formatPercentage(results[factor].pomp)
-      return `${name}:\n  average: ${average}/5\n  pomp: (${pomp})`
+      const range = setRange(results[factor].pomp)
+      return `${name}:\n  pomp: ${pomp}\n  range: ${range}`
     })
     .join('\n')
 
