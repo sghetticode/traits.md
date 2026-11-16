@@ -27,12 +27,11 @@ export function textKey(text: string): string {
   return text.toLowerCase().replace(/\.$/, '')
 }
 
-const idByTextKey = new Map(items.map((item) => [textKey(item.text), item.id]))
 const itemIds = new Set(items.map((item) => item.id))
 const ratingValues = new Set<string>(RATINGS.map((rating) => rating.value))
 
-// JSON.parse that treats unreadable data as "key absent" instead of throwing
-function readJson(key: string): unknown {
+// Treats unreadable data as an absent key instead of throwing
+function readJSON(key: string): unknown {
   const raw = localStorage.getItem(key)
   if (raw === null) return null
   try {
@@ -46,24 +45,24 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-// Keep valid entries only. Text keys from the old build are migrated to canonical ids first
 function readAnswers(): Answers {
-  const stored = readJson('answers')
+  const stored = readJSON('answers')
   if (!isRecord(stored)) return {}
 
   const answers: Answers = {}
   for (const [key, value] of Object.entries(stored)) {
-    const id = /^\d+$/.test(key) ? Number(key) : idByTextKey.get(key)
-    if (id === undefined || !itemIds.has(id)) continue
+    if (!/^\d+$/.test(key)) continue
+    const id = Number(key)
+    if (!itemIds.has(id)) continue
     if (typeof value !== 'string' || !ratingValues.has(value)) continue
     answers[id] = value as Rating
   }
   return answers
 }
 
-// Valid only with all five factors, each with a finite total and pomp
+// Valid only with all five factors, each with a finite total and POMP
 function readResults(): FactorResults | null {
-  const stored = readJson('results')
+  const stored = readJSON('testResults')
   if (!isRecord(stored)) return null
 
   const results = {} as FactorResults
@@ -79,8 +78,10 @@ function readResults(): FactorResults | null {
   return results
 }
 
-// Read and validate the saved session. Anything invalid falls back to its fresh value.
-// Idempotent, so it's safe for React StrictMode to call it twice
+/*
+ Read and validate the saved session, invalid falls back to fresh value
+ Safe for React StrictMode to call more than once
+*/
 export function loadSession(): Session {
   // Clear all local data an hour after the results file was downloaded
   const downloadTimestamp = Number(localStorage.getItem('downloadTimestamp'))
@@ -89,9 +90,7 @@ export function loadSession(): Session {
     return fresh()
   }
 
-  // Only the removed pre-paint script read this
   localStorage.removeItem('testSubmitted')
-  localStorage.removeItem('descriptionRegenerated')
 
   // Saved results win outright: show them, and drop the finished test's progress
   const results = readResults()
@@ -116,26 +115,38 @@ export function loadSession(): Session {
     page: started && Number.isInteger(page) && page >= 0 && page <= LAST_PAGE ? page : 0,
     answers: readAnswers(),
     results: null,
-    // A description without results is stale, so it's dropped along with them
     description: null,
   }
 }
 
-function writeOrRemove(key: string, value: string | null) {
-  if (value === null) localStorage.removeItem(key)
-  else localStorage.setItem(key, value)
-}
-
-// Mirror the session into localStorage, removing keys whose value is empty. Idempotent
+// Save session to localStorage, remove keys with empty values
 export function saveSession(session: Session) {
-  writeOrRemove('testStarted', session.started ? 'true' : null)
-  writeOrRemove('panelRendered', session.page ? String(session.page) : null)
-  writeOrRemove(
-    'answers',
-    Object.keys(session.answers).length ? JSON.stringify(session.answers) : null,
-  )
-  writeOrRemove('results', session.results ? JSON.stringify(session.results) : null)
-  writeOrRemove('traitDescription', session.description)
+  if (session.results && !session.started && !Object.keys(session.answers).length) {
+    localStorage.removeItem('panelRendered')
+  } else {
+    localStorage.setItem('panelRendered', String(session.page))
+  }
+  
+  if (session.started) localStorage.setItem('testStarted', 'true')
+  else localStorage.removeItem('testStarted')
+  
+  if (Object.keys(session.answers).length) {
+    localStorage.setItem('answers', JSON.stringify(session.answers))
+  } else {
+    localStorage.removeItem('answers')
+  }
+  
+  if (session.results) {
+    localStorage.setItem('testResults', JSON.stringify(session.results))
+  } else {
+    localStorage.removeItem('testResults')
+  }
+  
+  if (session.description === null) {
+    localStorage.removeItem('traitDescription')
+  } else {
+    localStorage.setItem('traitDescription', session.description)
+  }
 }
 
 // Start the one-hour countdown to clearing local data. Called by the Download click handler only
