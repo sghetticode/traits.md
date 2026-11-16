@@ -1,8 +1,9 @@
 ## IPIP 50-item Scale
 
-This is an IPIP 50-item representation of the Goldberg (1992) markers for measuring the Big-Five
-personality factors. It was obtained from the official International Personality Item Pool website
-that is linked at the bottom of this page.
+This is an IPIP 50-item representation of the *Goldberg* (1992) markers for measuring the Big-Five 
+personality factors. The items in this table were obtained from the official International 
+Personality Item Pool website on this page: 
+[IPIP 50-item scale](https://ipip.ori.org/New_IPIP-50-item-scale.htm).
 
 | #   | Item                                                   | Factor                | Key |
 | --- | ------------------------------------------------------ | --------------------- | --- |
@@ -61,6 +62,3 @@ that is linked at the bottom of this page.
 
 Goldberg, L. R. (1992). The development of markers for the Big-Five factor structure.
 *Psychological Assessment*, 4, 26-42.
-
-Link to the [IPIP website](https://ipip.ori.org/)  
-Source for the [IPIP 50-item scale](https://ipip.ori.org/New_IPIP-50-item-scale.htm)
