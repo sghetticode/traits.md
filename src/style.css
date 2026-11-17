@@ -3,8 +3,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-/* Scopes dark: utilities in shadcn components to a .dark class, which is never set, so they don't
-   follow the OS color scheme. The app is dark only; :root tokens below already hold the dark values. */
+/* Dark mode only. Utilities in shadcn components scope to .dark class and don't follow OS scheme. */
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -17,6 +16,50 @@
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   justify-items: center;
+}
+
+/* Rating radio colors, keyed by stored value, header labels carry data-rating.
+ * Uses components layer so utility variants like focus-visible:border-ring still win */
+@layer components {
+  [role='radio'][value='way off'] {
+    @apply border-red-900/70 bg-red-800/60;
+  }
+  [data-rating='way off'] {
+    @apply text-red-800/60;
+  }
+
+  [role='radio'][value='inaccurate'] {
+    @apply border-amber-800/70 bg-amber-700/60;
+  }
+  [data-rating='inaccurate'] {
+    @apply text-amber-700/60;
+  }
+
+  [role='radio'][value='neither'] {
+    @apply border-gray-700/80 bg-gray-600/70;
+  }
+  [data-rating='neither'] {
+    @apply text-gray-600/80;
+  }
+
+  [role='radio'][value='accurate'] {
+    @apply border-cyan-800/70 bg-cyan-700/60;
+  }
+  [data-rating='accurate'] {
+    @apply text-cyan-700/70;
+  }
+
+  [role='radio'][value='spot on'] {
+    @apply border-green-900/70 bg-green-800/60;
+  }
+  [data-rating='spot on'] {
+    @apply text-green-800/70;
+  }
+
+  /* Checked fill: the dot takes the item's text color when Radix sets data-state */
+  [role='radio'][data-state='checked'] {
+    @apply text-neutral-100/80;
+  }
 }
 
 /* shadcn semantic colors. No --radius-* overrides here, so Tailwind's default rounded-* scale applies */

@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { items, ITEMS_PER_PAGE, type Item } from '@/data/items'
 import { RATINGS, type Rating } from '@/data/ratings'
 import type { Answers } from '@/lib/scoring'
@@ -16,16 +15,15 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
   const pageItems = items.slice(start, start + ITEMS_PER_PAGE)
 
   return (
-    <div className="h-full min-h-140">
+    <div className="h-full min-h-140 p-2">
       <table
-        className={`w-full border-separate border-spacing-0 text-left [&_thead]:font-semibold
-          [&_thead]:whitespace-nowrap [&_tr>*]:px-4 [&_tr>*]:py-3 [&_tr>*]:align-middle
-          [&_thead_tr>*]:border-b [&_tbody_tr:not(:last-child)>*]:border-b table-fixed text-sm
-          md:text-base 2xl:text-lg [&_tr>*]:border-b-mist-500/50 max-sm:[&_tr>*]:px-1`
-        }
+        className={`w-full table-fixed border-separate border-spacing-0 text-left text-sm
+          md:text-base 2xl:text-lg [&_tbody_tr:not(:last-child)>*]:border-b [&_thead]:font-semibold
+          [&_thead]:whitespace-nowrap [&_thead_tr>*]:border-b [&_tr>*]:border-b-mist-500/50
+          [&_tr>*]:px-4 [&_tr>*]:py-3 [&_tr>*]:align-middle max-sm:[&_tr>*]:px-1`}
       >
         <colgroup>
-          <col className="w-8 sm:w-12" />
+          <col className="w-10 md:w-12" />
           <col />
         </colgroup>
         <thead>
@@ -37,7 +35,11 @@ export function ItemPanel({ page, answers, onAnswer }: ItemPanelProps) {
                   md:text-sm xl:text-base"
               >
                 {RATINGS.map((rating) => (
-                  <span key={rating.value} className={cn('w-full text-center', rating.header)}>
+                  <span
+                    key={rating.value}
+                    data-rating={rating.value}
+                    className="w-full text-center"
+                  >
                     {rating.label}
                   </span>
                 ))}
