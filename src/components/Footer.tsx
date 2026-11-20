@@ -8,8 +8,8 @@ export function Footer() {
         <h4 className="font-medium">YOUR DATA DOESN'T LEAVE YOUR DEVICE</h4>
         <p className="italic">
           Trait test data is temporarily stored in your browser.
-          <br className="min-[56rem]:hidden" /> All of it is deleted an hour after you download
-          your TRAITS.md file.
+          <br className="min-[56rem]:hidden" /> All of it is deleted an hour after you download your
+          TRAITS.md file.
         </p>
       </aside>
     </footer>
