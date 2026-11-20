@@ -1,7 +1,6 @@
-/*
- Display test card and intro/how it works section until test is submitted and reveals ResultsView.
- State lives in the two hooks, see src/README.md for the app's source map.
-*/
+/* Display trait test until answers are submitted then show user resutls.
+ * App state lives in hooks: useTraitTest and useDescriptionGenerator.
+ * See src/README.md for source map. */
 
 import { useTraitTest } from '@/hooks/useTraitTest'
 import { useDescriptionGenerator } from '@/hooks/useDescriptionGenerator'
@@ -19,13 +18,13 @@ export function App() {
   const generator = useDescriptionGenerator()
   const { state } = test
 
+  // Load model in background while user takes test
   function handleStart() {
     test.start()
-    // Load model in background while user takes test
     generator.preload()
   }
 
-  // Submit is disabled by default and enabled only after all 50 statements are ranked
+  // Submit is disabled by default and only enabled after all 50 statements are rated
   async function handleSubmit() {
     // Grades, logs, and shows scoring panel
     const results = test.submit()
@@ -56,9 +55,9 @@ export function App() {
         <>
           <Header />
           <main
-            className="mx-9 mt-8 mb-25 flex flex-1 flex-col gap-6 md:mt-12 lg:mx-9 lg:grid
-              lg:grid-cols-[minmax(0,5fr)_minmax(18rem,4fr)] lg:grid-rows-[auto_1fr] lg:gap-x-7
-              lg:gap-y-5"
+            className="mx-4 my-6 flex flex-1 flex-col gap-8 md:my-12 md:max-lg:mx-6 lg:mx-8 lg:grid
+              lg:grid-cols-[minmax(0,5fr)_minmax(18rem,4fr)] lg:grid-rows-[auto_1fr] lg:gap-x-8
+              lg:gap-y-6"
           >
             <h2
               className="text-center text-[1.375rem] font-normal text-mist-300/80 italic
@@ -67,10 +66,7 @@ export function App() {
               Let your agent get acquainted with you
             </h2>
             <IntroCard />
-            <div
-              id="column-left"
-              className="min-w-0 text-justify lg:col-start-1 lg:row-span-2 lg:row-start-1"
-            >
+            <div className="min-w-0 text-justify lg:col-start-1 lg:row-span-2 lg:row-start-1">
               <TestCard
                 state={state}
                 progressText={generator.progressText}
