@@ -15,7 +15,7 @@ export function InstructionsPanel({ started, onStart }: InstructionsPanelProps) 
         className="max-w-9/10 text-justify text-xl leading-normal text-mist-600 lg:text-[1.375rem]
           xl:text-2xl"
       >
-        The test takes about 6 minutes to finish when you take your time. Rank each statement as
+        The test takes about 6 minutes to finish when you take your time. Rate each statement as
         either
         <span className="font-medium"> way off</span>,
         <span className="font-medium"> inaccurate</span>,
@@ -25,19 +25,19 @@ export function InstructionsPanel({ started, onStart }: InstructionsPanelProps) 
         respond as you usually see yourself
         <span className="italic">, not how you think you should be.</span>
       </p>
-      <Button
-        type="button"
-        onClick={onStart}
-        aria-label="Start test"
-        disabled={started}
-        variant="ghost"
-        className={`cursor-pointer font-semibold text-shadow-[0_0.5px_oklch(100%_0_0/0.15)]
-          disabled:opacity-100 disabled:text-glacier/20 h-12 rounded-lg border-none
-          bg-mist-500/70 p-3 text-lg shadow-none hover:bg-mist-500/90`
-        }
-      >
-        Start test
-      </Button>
+      {!started && (
+        <Button
+          id="start-btn"
+          type="button"
+          onClick={onStart}
+          aria-label="Start test"
+          variant="ghost"
+          className="h-12 cursor-pointer rounded-lg border-none bg-mist-500/70 p-3 text-lg
+            font-normal shadow-none text-shadow-[0_0.5px_oklch(100%_0_0/0.15)] hover:bg-mist-500/90"
+        >
+          Start test
+        </Button>
+      )}
     </div>
   )
 }

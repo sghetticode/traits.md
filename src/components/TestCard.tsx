@@ -27,14 +27,15 @@ export function TestCard({ state, progressText, ...actions }: TestCardProps) {
   return (
     <div
       id="trait-test"
-      className="relative flex min-h-140 w-full flex-col rounded-xl bg-mist-400/90
-        md:max-lg:w-9/10 md:max-lg:mx-auto"
+      className="relative flex min-h-140 w-full flex-col rounded-xl bg-mist-400/90 md:max-lg:mx-auto
+        md:max-lg:w-9/10"
     >
-      <div className="relative flex min-h-0 flex-auto flex-col gap-3 p-6 text-sm max-sm:px-2">
+      <div className="relative flex min-h-0 flex-auto flex-col gap-3 px-4 py-8 text-sm max-sm:px-2">
         <Progress
           aria-label="Test progress"
           value={(answeredCount(answers) / items.length) * 100}
-          className="h-2 shrink-0 rounded-lg bg-mist-500/70 *:rounded-lg *:bg-mist-300/80"
+          className="mx-auto h-2 max-w-9/10 shrink-0 rounded-lg bg-mist-500/70 *:rounded-lg
+            *:bg-mist-300/80"
         />
         <div className="relative h-140 max-h-140 min-h-0 flex-1">
           {page === 0 && <InstructionsPanel started={started} onStart={actions.onStart} />}
@@ -50,10 +51,9 @@ export function TestCard({ state, progressText, ...actions }: TestCardProps) {
             />
           )}
         </div>
-        {!scoring && (
+        {started && !scoring && (
           <TestNav
             page={page}
-            started={started}
             onGoto={actions.onGoto}
             onPrev={actions.onPrev}
             onNext={actions.onNext}

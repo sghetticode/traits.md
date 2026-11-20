@@ -35,18 +35,13 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
             Scoring your trait test
           </span>
           <Spinner className="size-8" />
-          <p
-            className="text-base text-mist-600 italic md:text-xl"
-            role="status"
-          >
+          <p className="text-base text-mist-600 italic md:text-xl" role="status">
             {progressText}
           </p>
         </div>
       ) : (
         <>
-          <h3 className="text-2xl font-medium text-mist-600/90 md:text-3xl">
-            Submit your trait test
-          </h3>
+          <h3 className="text-2xl font-medium text-mist-600/90 md:text-3xl">Submit your answers</h3>
           {remaining > 0 && (
             <p
               className="mt-2 text-base text-orange-800 italic sm:text-lg xl:text-xl 2xl:text-2xl"
@@ -56,15 +51,15 @@ export function SubmitPanel({ answers, scoring, progressText, onSubmit }: Submit
             </p>
           )}
           <Button
+            id="submit-btn"
             type="button"
             onClick={onSubmit}
-            aria-label="Submit test"
+            aria-label="Submit"
             disabled={remaining > 0}
             variant="ghost"
-            className={`cursor-pointer font-semibold text-shadow-[0_0.5px_oklch(100%_0_0/0.15)]
-              disabled:opacity-100 disabled:text-glacier/20 mt-4 h-12 rounded-md border-none
-              bg-mist-500/70 p-3 text-lg shadow-none hover:bg-mist-500/90`
-            }
+            className={`disabled:text-glacier/20 mt-4 h-12 cursor-pointer rounded-md border-none
+              bg-mist-500/70 p-3 text-lg font-normal shadow-none
+              text-shadow-[0_0.5px_oklch(100%_0_0/0.15)] hover:bg-mist-500/90 disabled:opacity-100`}
           >
             Submit
           </Button>
