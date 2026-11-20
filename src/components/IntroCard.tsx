@@ -1,7 +1,7 @@
 export function IntroCard() {
   return (
     <div
-      id="intro"
+      id="intro-card"
       className="relative flex flex-col rounded-2xl bg-mist-500/75 shadow-sm shadow-mist-800/50
         md:max-lg:mx-auto md:max-lg:w-9/10 lg:col-start-2 lg:row-start-1 lg:rounded-b-md"
     >
@@ -10,8 +10,8 @@ export function IntroCard() {
           lg:text-[1.375rem]"
       >
         <span className="font-normal">Traits</span> help your agent adapt to you, by using test
-        results to generate an accurate description of your personality. Keep reading to learn how
-        it works or take the trait test to get started now!
+        results to generate a description of your personality. Read about how it works below or
+        take the trait test to get started now!
       </p>
     </div>
   )
