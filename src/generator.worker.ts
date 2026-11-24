@@ -75,11 +75,11 @@ export function getGenerator(): Promise<TextGenerationPipeline> {
           if (data.status !== 'progress' || data.total <= 0) return
           // Calculate percentage and log progress
           const percent = Math.floor((data.loaded / data.total) * 100)
-          const bucket = Math.floor(percent / 25) * 25
-          if (bucket > (lastLoggedPercent.get(data.file) ?? -1)) {
-            lastLoggedPercent.set(data.file, bucket)
-            console.log(`Generator: Downloading ${data.file}: ${bucket}%`)
-            workerScope.postMessage({ type: 'progress', file: data.file, percent: bucket })
+          const step = Math.floor(percent / 25) * 25
+          if (step > (lastLoggedPercent.get(data.file) ?? -1)) {
+            lastLoggedPercent.set(data.file, step)
+            console.log(`Generator: Downloading ${data.file}: ${step}%`)
+            workerScope.postMessage({ type: 'progress', file: data.file, percent: step })
           }
         },
       })
@@ -115,12 +115,13 @@ workerScope.onmessage = async (ev) => {
       do_sample: true,
       temperature: 0.4,
       top_k: 50,
-      repetition_penalty: 1.03,
+      repetition_penalty: 1.05,
       ...command.options,
     })
 
-    const content = output[0].generated_text.at(-1)?.content
-    if (typeof content === 'string' && content.length > 0) {
+    const raw = output[0].generated_text.at(-1)?.content
+    const content = typeof raw === 'string' ? stripThinking(raw) : ''
+    if (content.length > 0) {
       workerScope.postMessage({ type: 'result', text: content })
     } else {
       workerScope.postMessage({ type: 'error', message: 'Model returned empty output' })
@@ -132,4 +133,14 @@ workerScope.onmessage = async (ev) => {
       message: err instanceof Error ? err.message : String(err),
     })
   }
+}
+
+function stripThinking(text: string): string {
+  const open = text.indexOf('<think>')
+  if (open !== -1) text = text.slice(0, open)
+  
+  const close = text.lastIndexOf('</think>')
+  if (close !== -1) text = text.slice(close + '</think>'.length)
+
+  return text
 }
