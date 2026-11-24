@@ -1,4 +1,4 @@
-import { factors, type Factor, type FactorResults } from '@/factors'
+import { factors, type Factor, type FactorResults } from '@/data/factors'
 import { items as allItems, type Item } from '@/data/items'
 import type { Rating } from '@/data/ratings'
 
@@ -50,7 +50,33 @@ export function gradeTest(answers: Answers, items: Item[] = allItems): FactorRes
   return results
 }
 
-// Same console output as the original gradeTest
+// Ranges for factor POMP scores
+export type Range = 'Low end' | 'Low range' | 'Moderate' | 'High range' | 'High end'
+
+// Normalize raw percentages to 2.5% steps
+function snapPercentage(pomp: number): number {
+  const units = Math.round(pomp / 2.5)
+  return units * 2.5
+}
+
+// Format as whole percentages otherwise one decimal
+export function formatPercentage(pomp: number): string {
+  const value = snapPercentage(pomp)
+  const displayCents = Math.round(value * 100)
+  if (displayCents % 100 === 0) return `${displayCents / 100}%`
+  return `${(displayCents / 100).toFixed(1)}%`
+}
+
+// Map factor POMP scores to ranges
+export function setRange(percentage: number): Range {
+  const percent = snapPercentage(percentage)
+  if (percent < 12.5) return 'Low end'
+  if (percent < 37.5) return 'Low range'
+  if (percent < 62.5) return 'Moderate'
+  if (percent < 87.5) return 'High range'
+  return 'High end'
+}
+
 export function logResults(results: FactorResults) {
   console.log('Trait test results:')
   console.table(

@@ -18,39 +18,10 @@ export const factorNames: Record<Factor, string> = {
   'intellect-imagination': 'Intellect-Imagination',
 }
 
+export type FactorResults = Record<Factor, FactorResult>
+
 export interface FactorResult {
   total: number // raw score
   average: number // average response
   pomp: number // percentage of max possible
-}
-
-export type FactorResults = Record<Factor, FactorResult>
-
-// Ranges for factor POMP scores
-export type Range = 'Low end' | 'Low range' | 'Moderate' | 'High range' | 'High end'
-
-const FACTOR_PERCENT_STEP = 2.5
-
-// Normalize raw percentages to 2.5% steps produced by gradeTest()
-export function snapPercentage(pomp: number): number {
-  const units = Math.round(pomp / FACTOR_PERCENT_STEP)
-  return units * FACTOR_PERCENT_STEP
-}
-
-// Snap and format for display (whole percentages else one decimal)
-export function formatPercentage(pomp: number): string {
-  const value = snapPercentage(pomp)
-  const displayCents = Math.round(value * 100)
-  if (displayCents % 100 === 0) return `${displayCents / 100}%`
-  return `${(displayCents / 100).toFixed(1)}%`
-}
-
-// Map factor POMP scores to ranges
-export function setRange(percentage: number): Range {
-  const percent = snapPercentage(percentage)
-  if (percent < 12.5) return 'Low end'
-  if (percent < 37.5) return 'Low range'
-  if (percent < 62.5) return 'Moderate'
-  if (percent < 87.5) return 'High range'
-  return 'High end'
 }
