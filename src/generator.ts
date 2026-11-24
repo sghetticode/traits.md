@@ -1,5 +1,6 @@
 import type { Message } from '@huggingface/transformers'
-import { factors, factorNames, setRange, type FactorResults } from './factors'
+import { factors, factorNames, type FactorResults } from './data/factors'
+import { setRange } from './lib/scoring'
 
 export type ProgressHandler = (status: string) => void
 
@@ -19,10 +20,11 @@ type WorkerEvent =
 
 const DESC_GEN_RULES = `Description generation rules:
 - write a single sentence for each factor (total of 5 sentences)
-- choose adjectives to describe each factor based on its range
+- describe tendencies associated with the range of each factor
+- do not inlude the names of ranges in the description
+- the tone should be observational; avoid speculating about abilities
 - use present tense in second person, e.g., you/your
-- the tone should be observational; avoid speculation
-- do not write an introduction or conclusion`
+- never write an introduction or conclusion`
 
 type DescriptionDraft = {
   text: string
@@ -124,7 +126,7 @@ function requestGeneration(
   })
 }
 
-// Generate and grade drafts, return last draft if none pass
+// Generate personality description based on trait test results
 export async function generateDescription(
   results: FactorResults,
   onProgress: ProgressHandler,
@@ -132,12 +134,13 @@ export async function generateDescription(
   const run = ++draftRun
   const drafts: DescriptionDraft[] = []
   saveDrafts(run, drafts)
-  // Prompts for generating a personality trait description
+  // Local model system prompt
   const messages: Message[] = [
     {
       role: 'system',
       content: `Follow every rule when generating output:\n\n${DESC_GEN_RULES}`,
     },
+    // Prompt for generating a description
     {
       role: 'user',
       content: `Write a personality description based on the provided trait test results:\n
@@ -148,13 +151,14 @@ ${gatherTraitData(results)}`,
   onProgress('Preparing local model...')
 
   for (let attempt = 1; attempt <= 2; attempt++) {
-    const label = attempt === 1
-      ? 'Generating your personality description...' : 'Regenerating your personality description...'
+    const label =
+      attempt === 1
+        ? 'Generating your personality description...'
+        : 'Regenerating your personality description...'
     if (attempt === 1) {
       onProgress(label)
       console.log('Generating description...')
-    }
-    else {
+    } else {
       onProgress(label)
       console.log('Regenerating description...')
     }
@@ -186,38 +190,65 @@ ${gatherTraitData(results)}`,
   return last.text
 }
 
+function countSentences(draft: string): number {
+  const text = draft.trim()
+  if (!text) return 0
+
+  const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)
+
+  return sentences?.length ?? 0
+}
+
 async function gradeDescription(
   results: FactorResults,
   draft: string,
   onProgress: ProgressHandler,
 ): Promise<boolean> {
+  const tally = countSentences(draft)
+
+  if (tally !== 5) {
+    console.log(`Draft length check failed (${tally} sentences)`)
+    return false
+  } else {
+    console.log(`Draft length check passed (${tally} sentences)`)
+  }
+
   const messages: Message[] = [
     {
       role: 'system',
-      content: `Grade the personality description using this as a rubric:\n\n${DESC_GEN_RULES}\n\n
-Respond with "PASS" only if the description follows every rule in the rubric and accurately reflects
-the provided test results. Otherwise, the output is inaccurate, therefore respond with "FAIL".`,
+      content: `Grade the quality of the personality description using the following as a rubric:
+- describes tendencies associated with the given range of each factor
+- uses present tense in second person, e.g., you/your
+- does not inlude the names of ranges in the description
+- the tone is observational and avoids speculation
+- the paragraph has neither a conclusion or introduction`,
     },
     {
       role: 'user',
-      content: `Test results:\n\n${gatherTraitData(results)}\n\nDescription:\n\n${draft}`,
+      content: `Respond with "PASS" only if the description follows every rule in the rubric and accurately
+      reflects the provided test results. Otherwise, the output is inaccurate, so respond with "FAIL".
+      Output only one word for the resulting grade: PASS or FAIL.
+      Test results:\n\n${gatherTraitData(results)}\n\nDescription:\n\n${draft}`,
     },
   ]
 
   const grade = await requestGeneration(messages, onProgress, 'Running accuracy check...', {
     do_sample: false,
-    max_new_tokens: 4,
+    max_new_tokens: 24,
     tokenizer_encode_kwargs: { enable_thinking: false },
   })
-  
+
   const normalizedGrade = grade
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
     .at(-1)
     ?.toUpperCase()
+    .replace(/[^A-Z]/g, '')
 
   if (normalizedGrade === 'PASS') return true
   if (normalizedGrade === 'FAIL') return false
+  
+  // Fail closed default
   return false
 }
